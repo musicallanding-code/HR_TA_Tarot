@@ -96,11 +96,17 @@
   .card-back-glyph { position:relative; width:96px; height:96px; display:flex; align-items:center; justify-content:center; z-index:2; }
 
   .flip-scene { perspective:1600px; }
-  .flip-card { position:relative; width:288px; max-width:84vw; aspect-ratio:5/8; transform-style:preserve-3d; transition:transform 1.05s cubic-bezier(.5,.05,.2,1); }
+  .flip-card { position:relative; width:288px; max-width:84vw; aspect-ratio:5/8; transform-style:preserve-3d; -webkit-transform-style:preserve-3d; transition:transform 1.05s cubic-bezier(.5,.05,.2,1); }
   .flip-card.flipped { transform:rotateY(180deg); }
-  .face { position:absolute; inset:0; backface-visibility:hidden; border-radius:18px; overflow:hidden; }
-  .face-back { background:linear-gradient(160deg,#fbf5e8,#f0e6d0); border:1px solid rgba(201,168,106,0.55); box-shadow:0 22px 60px rgba(0,0,0,0.6); }
-  .face-front { transform:rotateY(180deg); background:linear-gradient(170deg,#faf3e2,var(--paper)); border:1px solid rgba(201,168,106,0.5);
+  .face { position:absolute; inset:0; border-radius:18px; overflow:hidden;
+    backface-visibility:hidden; -webkit-backface-visibility:hidden;
+    transform-style:preserve-3d; -webkit-transform-style:preserve-3d; }
+  /* 背面：明確推到 3D 空間後方，並設不透明底，避免行動瀏覽器 backface 失效時穿透 */
+  .face-back { background:linear-gradient(160deg,#fbf5e8,#f0e6d0); border:1px solid rgba(201,168,106,0.55); box-shadow:0 22px 60px rgba(0,0,0,0.6);
+    transform:rotateY(0deg) translateZ(1px); -webkit-transform:rotateY(0deg) translateZ(1px); }
+  /* 正面：旋轉 180 並推到前方，背景不透明（含 fallback 純色），完整遮住背面 */
+  .face-front { transform:rotateY(180deg) translateZ(1px); -webkit-transform:rotateY(180deg) translateZ(1px);
+    background:#f4ecda; background-image:linear-gradient(170deg,#faf3e2,#f4ecda); border:1px solid rgba(201,168,106,0.5);
     box-shadow:0 26px 70px rgba(0,0,0,0.6), 0 0 40px rgba(201,168,106,0.12); color:var(--ink); padding:24px 20px; display:flex; flex-direction:column; }
   .front-frame { position:absolute; inset:12px; border:1px solid rgba(10,14,26,0.16); border-radius:10px; pointer-events:none; }
   .front-corner { position:absolute; width:13px; height:13px; }
