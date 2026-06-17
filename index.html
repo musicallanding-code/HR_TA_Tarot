@@ -2,486 +2,439 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>CMoney｜AI 禪卡 · 79 種專家思維，一種決策</title>
 <meta name="description" content="與 AI 同行，用決策創造價值——CMoney 前往未來的唯一方向。抽一張牌，看見你的思維維度。">
 
 <!--
   ============================================================
-  CMoney 招募互動體驗 — 可替換項目（上線前請調整）
+  CMoney 招募互動體驗 — 零依賴版（無 React / Babel / CDN）
+  純 HTML + CSS + 原生 JS，斷網也能跑，手機秒開。
   ------------------------------------------------------------
-  1. 投遞連結：搜尋 APPLY_URL（已設為 104 全曜財經頁）。
-     已預埋 UTM，可依活動調整 utm_campaign。
-  2. 追蹤碼：搜尋 ANALYTICS CONFIG 區塊，填入 GA4 評估 ID
-     (G-XXXXXXX)。未填則自動降級為 console.log（不影響體驗）。
+  上線前可替換：
+  1. CTA 連結：搜尋 APPLY_URL（已設 104 全曜財經，含 UTM）。
+  2. 追蹤碼：搜尋 CMONEY_GA4_ID，填入 GA4 評估 ID（G-開頭）。
   3. 牌庫文案 / 品牌色：搜尋 CARDS / :root。
   ============================================================
 -->
 
-<!-- ===== ANALYTICS CONFIG：填入你的 GA4 ID ===== -->
+<!-- GA4（可選，填 ID 才啟用） -->
 <script>
-  window.CMONEY_GA4_ID = ""; // ← 例： "G-XXXXXXXXXX"（留空則僅 console 紀錄）
-</script>
-<!-- GA4 載入（僅當有填 ID 時） -->
-<script>
-(function(){
-  var id = window.CMONEY_GA4_ID;
-  if(!id) return;
-  var s = document.createElement('script'); s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
-  document.head.appendChild(s);
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function(){ dataLayer.push(arguments); };
-  gtag('js', new Date());
-  gtag('config', id, { send_page_view: true });
-})();
+  window.CMONEY_GA4_ID = ""; /* ← 例 "G-XXXXXXXXXX"，留空則僅 console 紀錄 */
+  (function(){
+    var id = window.CMONEY_GA4_ID;
+    if(!id) return;
+    var s=document.createElement('script'); s.async=true;
+    s.src='https://www.googletagmanager.com/gtag/js?id='+id;
+    document.head.appendChild(s);
+    window.dataLayer=window.dataLayer||[];
+    window.gtag=function(){dataLayer.push(arguments);};
+    gtag('js',new Date()); gtag('config',id,{send_page_view:true});
+  })();
 </script>
 
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
 <style>
-  :root {
-    --ink:    #0a0e1a;
-    --ink-2:  #111729;
-    --cm-red: #e2231a;   /* CMoney 品牌紅 */
-    --cm-red-2:#ff4b42;
-    --gold:   #c9a86a;
-    --gold-2: #e8d4a0;
-    --jade:   #6fb3a8;
-    --paper:  #f4ecda;
-    --mist:   #9aa3b8;
+  :root{
+    --ink:#0a0e1a; --ink-2:#111729;
+    --cm-red:#e2231a; --cm-red-2:#ff4b42;
+    --gold:#c9a86a; --gold-2:#e8d4a0; --jade:#6fb3a8;
+    --paper:#f4ecda; --mist:#9aa3b8;
   }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin:0; padding:0; background:var(--ink); font-family:'Noto Serif TC',serif; color:#e9e4d6; overflow-x:hidden; }
-  .font-display { font-family:'Cormorant Garamond','Noto Serif TC',serif; }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;background:var(--ink);font-family:'Noto Serif TC',serif;color:#e9e4d6;overflow-x:hidden;}
+  .font-display{font-family:'Cormorant Garamond','Noto Serif TC',serif;}
+  img{max-width:100%;}
 
-  .atmosphere {
-    position:fixed; inset:0; z-index:0; pointer-events:none;
+  .atmosphere{position:fixed;inset:0;z-index:0;pointer-events:none;
     background:
       radial-gradient(120% 80% at 50% -10%, rgba(226,35,26,0.10), transparent 58%),
       radial-gradient(90% 70% at 82% 112%, rgba(111,179,168,0.08), transparent 55%),
       radial-gradient(70% 50% at 15% 40%, rgba(201,168,106,0.06), transparent 60%),
-      linear-gradient(180deg, var(--ink), var(--ink-2));
-  }
-  .grain {
-    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.05;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-  .particle { position:absolute; border-radius:50%; background:radial-gradient(circle, rgba(232,212,160,0.9), rgba(232,212,160,0)); animation:float linear infinite; }
-  @keyframes float { 0%{transform:translateY(0) translateX(0);opacity:0;} 10%{opacity:.7;} 90%{opacity:.5;} 100%{transform:translateY(-110vh) translateX(20px);opacity:0;} }
+      linear-gradient(180deg, var(--ink), var(--ink-2));}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  .particles{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;}
+  .particle{position:absolute;border-radius:50%;background:radial-gradient(circle, rgba(232,212,160,0.9), rgba(232,212,160,0));animation:float linear infinite;}
+  @keyframes float{0%{transform:translateY(0) translateX(0);opacity:0;}10%{opacity:.7;}90%{opacity:.5;}100%{transform:translateY(-110vh) translateX(20px);opacity:0;}}
 
-  .reveal { opacity:0; transform:translateY(14px); animation:rise 1.1s cubic-bezier(.22,.61,.36,1) forwards; }
-  @keyframes rise { to { opacity:1; transform:translateY(0);} }
-  .fade-in-up { opacity:0; transform:translateY(10px); animation:rise .8s ease forwards; }
+  .reveal{opacity:0;transform:translateY(14px);animation:rise 1.1s cubic-bezier(.22,.61,.36,1) forwards;}
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
+  .fade-in-up{opacity:0;transform:translateY(10px);animation:rise .8s ease forwards;}
 
-  .deck-wrap { perspective:1600px; }
-  .deck { position:relative; width:200px; height:320px; cursor:pointer; transition:transform .5s cubic-bezier(.22,.61,.36,1); }
-  .deck:hover { transform:translateY(-8px); }
-  .deck:active { transform:translateY(-2px) scale(.99); }
-  /* 牌堆改為米白象牙底，邊緣金線 + 柔陰影，與深色頁面對比但不刺眼 */
-  .stack-card { position:absolute; inset:0; border-radius:16px;
-    background:linear-gradient(160deg, #fbf5e8, #f0e6d0);
+  #app{position:relative;z-index:2;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:40px 22px 60px;}
+
+  .logo-head{margin-bottom:30px;display:flex;justify-content:center;width:100%;}
+  .logo-head img{height:30px;display:block;filter:drop-shadow(0 2px 10px rgba(0,0,0,0.5));}
+
+  .head{text-align:center;max-width:580px;}
+  .kicker{color:var(--gold);letter-spacing:.34em;font-size:12px;text-transform:uppercase;margin-bottom:20px;}
+  .h1{font-size:27px;line-height:1.55;font-weight:500;margin:0;color:#efe8d8;}
+  .h1.red{font-weight:600;color:var(--cm-red-2);margin-top:2px;}
+  .lede{color:var(--mist);font-size:14px;line-height:1.95;margin-top:20px;font-weight:300;}
+
+  .stage{margin-top:46px;width:100%;display:flex;flex-direction:column;align-items:center;}
+
+  .deck-wrap{perspective:1600px;}
+  .deck{position:relative;width:200px;height:320px;cursor:pointer;transition:transform .5s cubic-bezier(.22,.61,.36,1);}
+  .deck:hover{transform:translateY(-8px);}
+  .deck:active{transform:translateY(-2px) scale(.99);}
+  .stack-card{position:absolute;inset:0;border-radius:16px;
+    background:linear-gradient(160deg,#fbf5e8,#f0e6d0);
     border:1px solid rgba(201,168,106,0.55);
-    box-shadow:0 18px 50px rgba(0,0,0,0.55), inset 0 0 30px rgba(201,168,106,0.08); }
+    box-shadow:0 18px 50px rgba(0,0,0,0.55), inset 0 0 30px rgba(201,168,106,0.08);}
+  .card-back-pattern{position:absolute;inset:0;border-radius:16px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  .card-back-glyph{position:relative;width:96px;height:96px;display:flex;align-items:center;justify-content:center;z-index:2;}
+  .card-back-glyph img{width:56px;height:auto;display:block;}
 
-  .card-back-pattern { position:absolute; inset:0; border-radius:16px; overflow:hidden;
-    display:flex; align-items:center; justify-content:center; }
-  /* 中央 C 標誌承載區 */
-  .card-back-glyph { position:relative; width:96px; height:96px; display:flex; align-items:center; justify-content:center; z-index:2; }
+  .hint{margin-top:30px;color:var(--gold-2);font-size:15px;letter-spacing:.12em;}
+  .hint-sub{margin-top:6px;color:var(--mist);font-size:12px;opacity:.7;}
 
-  .flip-scene { perspective:1600px; }
-  .flip-card { position:relative; width:288px; max-width:84vw; aspect-ratio:5/8; transform-style:preserve-3d; -webkit-transform-style:preserve-3d; transition:transform 1.05s cubic-bezier(.5,.05,.2,1); }
-  .flip-card.flipped { transform:rotateY(180deg); }
-  .face { position:absolute; inset:0; border-radius:18px; overflow:hidden;
-    backface-visibility:hidden; -webkit-backface-visibility:hidden;
-    transform-style:preserve-3d; -webkit-transform-style:preserve-3d; }
-  /* 背面：明確推到 3D 空間後方，並設不透明底，避免行動瀏覽器 backface 失效時穿透 */
-  .face-back { background:linear-gradient(160deg,#fbf5e8,#f0e6d0); border:1px solid rgba(201,168,106,0.55); box-shadow:0 22px 60px rgba(0,0,0,0.6);
-    transform:rotateY(0deg) translateZ(1px); -webkit-transform:rotateY(0deg) translateZ(1px); }
-  /* 正面：旋轉 180 並推到前方，背景不透明（含 fallback 純色），完整遮住背面 */
-  .face-front { transform:rotateY(180deg) translateZ(1px); -webkit-transform:rotateY(180deg) translateZ(1px);
-    background:#f4ecda; background-image:linear-gradient(170deg,#faf3e2,#f4ecda); border:1px solid rgba(201,168,106,0.5);
-    box-shadow:0 26px 70px rgba(0,0,0,0.6), 0 0 40px rgba(201,168,106,0.12); color:var(--ink); padding:24px 20px; display:flex; flex-direction:column; }
-  .front-frame { position:absolute; inset:12px; border:1px solid rgba(10,14,26,0.16); border-radius:10px; pointer-events:none; }
-  .front-corner { position:absolute; width:13px; height:13px; }
+  .flip-scene{perspective:1600px;}
+  .flip-card{position:relative;width:288px;max-width:84vw;aspect-ratio:5/8;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform 1.05s cubic-bezier(.5,.05,.2,1);}
+  .flip-card.flipped{transform:rotateY(180deg);}
+  .face{position:absolute;inset:0;border-radius:18px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;}
+  .face-back{background:linear-gradient(160deg,#fbf5e8,#f0e6d0);border:1px solid rgba(201,168,106,0.55);box-shadow:0 22px 60px rgba(0,0,0,0.6);transform:rotateY(0deg) translateZ(1px);-webkit-transform:rotateY(0deg) translateZ(1px);display:flex;align-items:center;justify-content:center;}
+  .face-front{transform:rotateY(180deg) translateZ(1px);-webkit-transform:rotateY(180deg) translateZ(1px);
+    background:#f4ecda;background-image:linear-gradient(170deg,#faf3e2,#f4ecda);border:1px solid rgba(201,168,106,0.5);
+    box-shadow:0 26px 70px rgba(0,0,0,0.6), 0 0 40px rgba(201,168,106,0.12);color:var(--ink);padding:24px 20px;display:flex;flex-direction:column;}
+  .front-frame{position:absolute;inset:12px;border:1px solid rgba(10,14,26,0.16);border-radius:10px;pointer-events:none;}
+  .front-inner{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;position:relative;z-index:2;overflow-y:auto;}
+  .suit-badge{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#b08d4a;}
+  .card-en{color:#9b7d3e;letter-spacing:.18em;font-size:11px;text-transform:uppercase;margin-top:2px;}
+  .card-zh{font-size:32px;font-weight:700;margin:2px 0;color:#1a2235;letter-spacing:.08em;}
+  .card-zh.master{font-size:34px;}
+  .value-tag{display:inline-block;margin:4px auto 10px;padding:2px 12px;border-radius:20px;background:rgba(226,35,26,0.08);border:1px solid rgba(226,35,26,0.25);font-size:11px;color:#b21f17;letter-spacing:.1em;}
+  .card-insight{font-size:14px;line-height:1.8;color:#2b3450;margin:0 6px 12px;font-weight:500;}
+  .card-insight.master{font-size:13px;}
+  .hairline{height:1px;background:linear-gradient(90deg, transparent, rgba(10,14,26,0.25), transparent);}
+  .card-q{font-size:13px;line-height:1.75;color:#6a5a36;font-style:italic;margin:0 6px;}
 
-  .btn-primary { background:linear-gradient(135deg, var(--cm-red-2), var(--cm-red)); color:#fff; font-weight:600; letter-spacing:.04em;
-    transition:transform .25s ease, box-shadow .25s ease, filter .25s ease; box-shadow:0 10px 30px rgba(226,35,26,0.32); }
-  .btn-primary:hover { transform:translateY(-2px); box-shadow:0 16px 42px rgba(226,35,26,0.46); filter:brightness(1.06); }
-  .btn-ghost { color:var(--gold-2); border:1px solid rgba(201,168,106,0.5); transition:all .25s ease; letter-spacing:.04em; }
-  .btn-ghost:hover { background:rgba(201,168,106,0.1); border-color:var(--gold-2); }
-  .hairline { height:1px; background:linear-gradient(90deg, transparent, rgba(10,14,26,0.25), transparent); }
+  .actions{margin-top:36px;display:flex;flex-direction:column;align-items:center;gap:13px;width:100%;max-width:310px;}
+  .btn-primary{background:linear-gradient(135deg,var(--cm-red-2),var(--cm-red));color:#fff;font-weight:600;letter-spacing:.04em;
+    width:100%;text-align:center;padding:15px 20px;border-radius:12px;border:none;cursor:pointer;font-size:15px;font-family:inherit;text-decoration:none;
+    transition:transform .25s ease, box-shadow .25s ease, filter .25s ease;box-shadow:0 10px 30px rgba(226,35,26,0.32);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 42px rgba(226,35,26,0.46);filter:brightness(1.06);}
+  .btn-ghost{color:var(--gold-2);border:1px solid rgba(201,168,106,0.5);width:100%;padding:13px 20px;border-radius:12px;background:transparent;cursor:pointer;font-size:14px;font-family:inherit;letter-spacing:.04em;transition:all .25s ease;}
+  .btn-ghost:hover{background:rgba(201,168,106,0.1);border-color:var(--gold-2);}
+  .counter{color:var(--mist);font-size:12px;opacity:.7;margin-top:2px;}
 
-  .suit-badge { font-size:11px; letter-spacing:.2em; text-transform:uppercase; }
+  .footer{margin-top:auto;padding-top:54px;text-align:center;max-width:560px;}
+  .footer .claim{color:var(--gold-2);font-size:19px;letter-spacing:.06em;line-height:1.6;margin-bottom:10px;}
+  .footer .sub{color:var(--mist);font-size:12px;letter-spacing:.05em;}
+  .footer .values{color:var(--mist);font-size:12.5px;letter-spacing:.14em;line-height:1.9;margin-top:18px;}
+
+  .interstitial{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(6,9,17,0.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:rise .45s ease forwards;}
+  .inter-box{max-width:420px;width:100%;text-align:center;background:linear-gradient(170deg,#141b2e,#0c1120);border:1px solid rgba(201,168,106,0.35);border-radius:20px;padding:40px 28px;box-shadow:0 30px 80px rgba(0,0,0,0.6);}
+  .inter-kicker{color:var(--gold);letter-spacing:.28em;font-size:11px;text-transform:uppercase;margin-bottom:14px;}
+  .inter-h{font-size:21px;font-weight:600;color:#efe8d8;line-height:1.6;margin:0 0 14px;}
+  .inter-p{color:var(--mist);font-size:14px;line-height:1.95;margin:0 0 26px;}
+  .inter-note{color:rgba(154,163,184,0.55);font-size:11px;margin-top:16px;line-height:1.7;}
+
+  .hidden{display:none !important;}
 </style>
 </head>
 <body>
 <div class="atmosphere"></div>
 <div class="grain"></div>
-<div id="root" style="position:relative; z-index:2;"></div>
+<div class="particles" id="particles"></div>
+
+<div id="app">
+  <div class="logo-head reveal" style="animation-delay:.05s">
+    <img id="wordmark" alt="CMoney">
+  </div>
+
+  <div class="head">
+    <div class="kicker reveal font-display" style="animation-delay:.2s">Zen Cards of Decision</div>
+    <h1 class="h1 reveal" style="animation-delay:.35s">AI 是 79 種專家思維</h1>
+    <h1 class="h1 red reveal" style="animation-delay:.6s">而決策，是我們最終的產出</h1>
+    <p class="lede reveal" style="animation-delay:.9s">
+      奧修禪卡共 79 張，不預測命運，只提供觀看當下的視角。<br>
+      AI 之於 CMoney 亦然——它給你 78 種專家視角，<br>而第 79 張，是掌握自己思維的你。
+    </p>
+  </div>
+
+  <div class="stage">
+    <!-- 牌堆 -->
+    <div id="deckView" class="reveal" style="animation-delay:1.2s;display:flex;flex-direction:column;align-items:center">
+      <div class="deck-wrap">
+        <div class="deck" id="deck" role="button" aria-label="抽一張牌">
+          <div class="stack-card" style="transform:translate(10px,10px) rotate(4deg);opacity:.5"></div>
+          <div class="stack-card" style="transform:translate(5px,5px) rotate(2deg);opacity:.75"></div>
+          <div class="stack-card">
+            <div class="card-back-pattern" id="deckBack"></div>
+          </div>
+        </div>
+      </div>
+      <p class="hint">抽一張，看見你的思維維度</p>
+      <p class="hint-sub">（點擊牌堆 · 共 79 張）</p>
+    </div>
+
+    <!-- 抽到的牌 -->
+    <div id="cardView" class="hidden" style="display:flex;flex-direction:column;align-items:center">
+      <div class="flip-scene fade-in-up">
+        <div class="flip-card" id="flipCard">
+          <div class="face face-back" id="flipBack"></div>
+          <div class="face face-front" id="flipFront"></div>
+        </div>
+      </div>
+      <div class="actions fade-in-up" style="animation-delay:.9s">
+        <button class="btn-primary" id="ctaBtn">這就是我們工作的方式 → 投遞履歷</button>
+        <button class="btn-ghost" id="againBtn">再抽一張</button>
+        <p class="counter" id="counter"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="hairline" style="width:120px;margin:0 auto 18px"></div>
+    <p class="claim font-display">「與 AI 同行，用決策創造價值」</p>
+    <p class="sub">是 CMoney 前往未來的唯一方向。</p>
+    <p class="values">貢獻價值 · 超越自我 · 身心靈一致</p>
+  </div>
+</div>
+
+<!-- 中繼確認頁 -->
+<div id="interstitial" class="interstitial hidden">
+  <div class="inter-box">
+    <div id="interGlyph" style="display:flex;justify-content:center;margin-bottom:18px"></div>
+    <div class="inter-kicker font-display">The Final Card · You</div>
+    <h2 class="inter-h">第 79 張，由你親手翻開</h2>
+    <p class="inter-p">前面 78 種視角，是 AI 給你的思維。<br>而下一個決策——把履歷投出去——<br>是你成為自己師父的第一步。</p>
+    <a id="proceedBtn" class="btn-primary" style="margin-bottom:12px" target="_blank" rel="noopener">前往 104 · 投遞我的履歷 →</a>
+    <button id="interBack" class="btn-ghost">再想想，回到牌卡</button>
+    <p class="inter-note">將前往 104 全曜財經資訊徵才頁面（另開分頁）</p>
+  </div>
+</div>
 
 <script>
-/* ===== 內嵌資料（LOGO + 79 張牌）由建置腳本注入 ===== */
-const LOGO_WORDMARK = "data:image/png;base64,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";
-const LOGO_C_MARK = "data:image/png;base64,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";
-const LOGO_MARK = "data:image/webp;base64,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";
-const CARDS = [{"name_zh": "傻瓜", "name_en": "The Fool", "suit": "major", "value": "transcend", "insight": "AI 替你算盡風險，但敢縱身一躍的，永遠是人。它讓你帶著清醒去冒險。", "question": "若失敗的成本被資料看透了，你還願意為什麼縱身一躍？", "glyph": "fool"}, {"name_zh": "存在", "name_en": "Existence", "suit": "major", "value": "align", "insight": "AI 處理外在的雜訊，把你帶回最單純的存在——專注於此刻真正重要的事。", "question": "剝除所有頭銜與工具，你存在的價值是什麼？", "glyph": "existence"}, {"name_zh": "內在的聲音", "name_en": "Inner Voice", "suit": "major", "value": "align", "insight": "AI 給你眾多外部觀點，但最終的拍板，要回到你內在那個清楚的聲音。", "question": "當所有數據都指向一個方向，你內在的聲音同意嗎？", "glyph": "inner_voice"}, {"name_zh": "創造力", "name_en": "Creativity", "suit": "major", "value": "contribute", "insight": "當執行被 AI 自動化，創造力成為你貢獻價值無可取代的核心。", "question": "若不必再做重複的事，你想創造出什麼以前沒空做的東西？", "glyph": "creativity"}, {"name_zh": "反叛者", "name_en": "The Rebel", "suit": "major", "value": "transcend", "insight": "AI 看穿舊規則的低效，反叛不是叛逆，是對更好方式的忠誠。", "question": "哪一條你習以為常的規則，其實早該被你親手打破？", "glyph": "rebel"}, {"name_zh": "空", "name_en": "No-Thingness", "suit": "major", "value": "align", "insight": "AI 清空了你的待辦，留白不是空虛，是讓重要決策浮現的空間。", "question": "當行事曆被清出一片空白，你會用它思考什麼？", "glyph": "emptiness"}, {"name_zh": "戀人", "name_en": "The Lovers", "suit": "major", "value": "contribute", "insight": "AI 媒合最佳組合，但真正的協作，來自人與人之間的信任與共鳴。", "question": "你與團隊之間，是分工，還是真正的共鳴？", "glyph": "lovers"}, {"name_zh": "覺知", "name_en": "Awareness", "suit": "major", "value": "align", "insight": "AI 照見你思考的盲點，覺察，是一切改變的第一個動作。", "question": "你上一次意識到自己想錯了，是什麼時候？", "glyph": "awareness"}, {"name_zh": "勇氣", "name_en": "Courage", "suit": "major", "value": "transcend", "insight": "工具放大了能力，真正稀缺的，是敢於承擔判斷的那個人。", "question": "當資訊都齊備了，你敢不敢成為拍板的那個人？", "glyph": "courage"}, {"name_zh": "單獨", "name_en": "Aloneness", "suit": "major", "value": "align", "insight": "AI 永遠在線，但深度的決策，需要你獨自面對的安靜時刻。", "question": "你有多久沒有在無干擾中，與自己的判斷獨處？", "glyph": "aloneness"}, {"name_zh": "改變", "name_en": "Change", "suit": "major", "value": "transcend", "insight": "AI 讓變動成為常態，與其抗拒輪轉，不如成為駕馭它的人。", "question": "面對不會停下的改變，你選擇被推著走，還是主動轉向？", "glyph": "change"}, {"name_zh": "突破", "name_en": "Breakthrough", "suit": "major", "value": "transcend", "insight": "舊流程的牆一旦被看穿，AI 就是你拆牆的槓桿。", "question": "哪一道限制，是你一直繞過、卻從未正面突破的？", "glyph": "breakthrough"}, {"name_zh": "新的洞見", "name_en": "New Vision", "suit": "major", "value": "transcend", "insight": "AI 翻轉你的視角，讓你從倒掛的角度，看見原本看不見的解法。", "question": "若把問題整個顛倒過來看，你會發現什麼？", "glyph": "new_vision"}, {"name_zh": "蛻變", "name_en": "Transformation", "suit": "major", "value": "transcend", "insight": "AI 接手重複，讓你把心力投向真正需要判斷的決策。", "question": "若例行工作效率被放大十倍，你想拿回的時間用來超越什麼？", "glyph": "transformation"}, {"name_zh": "整合", "name_en": "Integration", "suit": "major", "value": "contribute", "insight": "散落各處的線索，AI 替你織成一張可被決策的全貌。", "question": "你習慣看見局部，還是願意退後一步看見整體？", "glyph": "integration"}, {"name_zh": "制約", "name_en": "Conditioning", "suit": "major", "value": "transcend", "insight": "AI 揭露你被訓練出來的慣性，看見制約，才有鬆綁的可能。", "question": "你引以為傲的經驗，會不會正是限制你的框架？", "glyph": "conditioning"}, {"name_zh": "雷電", "name_en": "Thunderbolt", "suit": "major", "value": "transcend", "insight": "AI 預警崩塌前的裂縫，危機不是終點，是重建更好結構的起點。", "question": "若舊的結構注定瓦解，你想在廢墟上蓋出什麼？", "glyph": "thunderbolt"}, {"name_zh": "寧靜", "name_en": "Silence", "suit": "major", "value": "align", "insight": "AI 隔絕雜音，寧靜不是無所事事，是讓清晰浮現的內在狀態。", "question": "在資訊的洪流中，你如何替自己保留一片寧靜？", "glyph": "silence"}, {"name_zh": "前世", "name_en": "Past Lives", "suit": "major", "value": "align", "insight": "AI 從歷史資料看見模式，但你不必被過去定義你的下一步。", "question": "你正在重複哪一個其實該放下的舊模式？", "glyph": "past_lives"}, {"name_zh": "純真", "name_en": "Innocence", "suit": "major", "value": "align", "insight": "AI 給你經驗的累積，但保持一顆初心，才能看見新的可能。", "question": "你還記得不被經驗綁住、單純探索的那種眼光嗎？", "glyph": "innocence"}, {"name_zh": "超越幻象", "name_en": "Beyond Illusion", "suit": "major", "value": "transcend", "insight": "AI 戳破數據的假象，超越幻象，是看清事情真正的樣子。", "question": "你正在相信的某個「理所當然」，會不會其實是幻象？", "glyph": "beyond_illusion"}, {"name_zh": "完成", "name_en": "Completion", "suit": "major", "value": "contribute", "insight": "AI 幫你收束每個段落，完成不是結束，是貢獻價值後的圓滿交付。", "question": "你手上哪一件事，值得被好好地畫下句點？", "glyph": "completion"}, {"name_zh": "火之王", "name_en": "King of Fire", "suit": "fire", "value": "contribute", "insight": "AI 放大你的影響力，真正的領導，是點燃他人而非取代他人。", "question": "你帶來的火，是照亮團隊，還是只燒亮自己？", "glyph": "fire"}, {"name_zh": "火之后", "name_en": "Queen of Fire", "suit": "fire", "value": "contribute", "insight": "AI 處理瑣務，讓你能用全副熱情，分享給真正重要的人事。", "question": "你的熱情，有沒有用在最值得的地方？", "glyph": "fire"}, {"name_zh": "火之騎士", "name_en": "Knight of Fire", "suit": "fire", "value": "transcend", "insight": "AI 鋪平道路，但全力衝刺的決心，仍要由你自己點燃。", "question": "你上一次全力以赴，是為了什麼？", "glyph": "fire"}, {"name_zh": "火之侍者", "name_en": "Page of Fire", "suit": "fire", "value": "transcend", "insight": "AI 給你嘗試的安全網，玩心與好奇，是創新最初的火花。", "question": "你有多久沒有純粹因為好玩而嘗試一件事？", "glyph": "fire"}, {"name_zh": "源頭", "name_en": "The Source (Ace of Fire)", "suit": "fire", "value": "contribute", "insight": "工具會更迭，貢獻的初心，才是不被取代的能量源頭。", "question": "剝開工具與職稱，你真正想為誰創造什麼？", "glyph": "fire"}, {"name_zh": "可能性", "name_en": "Possibilities", "suit": "fire", "value": "transcend", "insight": "AI 展開所有選項，但選擇走哪一條路，是你超越自我的起點。", "question": "眼前的可能性中，哪一個讓你既害怕又興奮？", "glyph": "fire"}, {"name_zh": "經驗", "name_en": "Experience", "suit": "fire", "value": "align", "insight": "AI 累積資料，但經驗的智慧，來自你親身走過的反思。", "question": "你的經驗，是越走越開闊，還是越走越窄？", "glyph": "fire"}, {"name_zh": "壓力", "name_en": "Stress", "suit": "fire", "value": "align", "insight": "AI 替你卸下負荷，但平衡身心的節奏，要由你自己守住。", "question": "你是在工作，還是被工作追著跑？", "glyph": "fire"}, {"name_zh": "精疲力竭", "name_en": "Exhaustion", "suit": "fire", "value": "align", "insight": "AI 接手過載，提醒你：耗盡自己，無法持續貢獻價值。", "question": "你正在燃燒的，是熱情，還是只是力氣？", "glyph": "fire"}, {"name_zh": "壓抑", "name_en": "Suppression", "suit": "fire", "value": "transcend", "insight": "AI 攤開被壓住的問題，看見它，是釋放能量的第一步。", "question": "你正壓抑著哪一個其實該說出口的判斷？", "glyph": "fire"}, {"name_zh": "玩興", "name_en": "Playfulness", "suit": "fire", "value": "align", "insight": "AI 降低試錯成本，讓工作多一點玩興，少一點僵硬。", "question": "你能不能在嚴肅的工作裡，保留一點遊戲的心？", "glyph": "fire"}, {"name_zh": "延遲", "name_en": "Slowing Down", "suit": "fire", "value": "align", "insight": "AI 加快了一切，但有些重要決策，值得你刻意慢下來。", "question": "哪一個決定，你其實需要再多給它一點時間？", "glyph": "fire"}, {"name_zh": "總和", "name_en": "Totality", "suit": "fire", "value": "transcend", "insight": "AI 整合片段，全心投入當下，才能發揮你的全部。", "question": "此刻的你，是全然投入，還是分心於別處？", "glyph": "fire"}, {"name_zh": "旅人", "name_en": "The Traveler (Ten of Fire)", "suit": "fire", "value": "transcend", "insight": "AI 卸下你不必扛的重擔，旅程的意義，在於輕裝前行。", "question": "你正背著哪些其實可以放下的負擔？", "glyph": "fire"}, {"name_zh": "水之王", "name_en": "King of Water", "suit": "water", "value": "contribute", "insight": "AI 分析人心，但真正的同理，來自你願意傾聽的那份心。", "question": "你聽見的，是話語，還是話語背後的需要？", "glyph": "water"}, {"name_zh": "水之后", "name_en": "Queen of Water", "suit": "water", "value": "align", "insight": "AI 處理流程，讓你有餘裕，照顧自己與他人的情緒流動。", "question": "你有沒有把照顧自己，放進每天的待辦？", "glyph": "water"}, {"name_zh": "水之騎士", "name_en": "Knight of Water", "suit": "water", "value": "align", "insight": "AI 給你資訊，但跟隨內心的方向，需要你信任自己的直覺。", "question": "當理性與直覺衝突，你會聽哪一個？", "glyph": "water"}, {"name_zh": "水之侍者", "name_en": "Page of Water", "suit": "water", "value": "align", "insight": "AI 提供結構，理解，是讓資訊真正流進心裡的能力。", "question": "你是在接收資訊，還是真正理解了它？", "glyph": "water"}, {"name_zh": "順流", "name_en": "Going with the Flow (Ace of Water)", "suit": "water", "value": "align", "insight": "AI 排除阻力，如水般順勢，是身心靈一致的流動狀態。", "question": "你是在逆流硬撐，還是找到了順流的方式？", "glyph": "water"}, {"name_zh": "友善", "name_en": "Friendliness", "suit": "water", "value": "contribute", "insight": "AI 連結節點，但溫暖的關係，是由真誠的善意累積而成。", "question": "你與同事之間，多了效率，會不會少了善意？", "glyph": "water"}, {"name_zh": "假面", "name_en": "The Mask", "suit": "water", "value": "align", "insight": "AI 看穿表象，卸下假面，才能與人真實地連結。", "question": "你在工作場合戴著的面具，累不累？", "glyph": "water"}, {"name_zh": "放下", "name_en": "Letting Go", "suit": "water", "value": "transcend", "insight": "AI 接住你放下的，學會鬆手，是超越執著的智慧。", "question": "你緊抓著哪一件其實該放下的事？", "glyph": "water"}, {"name_zh": "和諧", "name_en": "Harmony", "suit": "water", "value": "align", "insight": "AI 協調資源，真正的和諧，是內在與外在的同頻共振。", "question": "你的內在節奏，與外在的生活同步嗎？", "glyph": "water"}, {"name_zh": "理想主義之夢", "name_en": "Dream", "suit": "water", "value": "transcend", "insight": "AI 校準現實，但懷抱夢想的勇氣，是超越眼前的力量。", "question": "你還記得當初想做這件事的那個夢嗎？", "glyph": "water"}, {"name_zh": "投射", "name_en": "Projecting", "suit": "water", "value": "align", "insight": "AI 提供客觀視角，看清投射，才不會把假設當成真相。", "question": "你看見的對方，是真實的他，還是你的投射？", "glyph": "water"}, {"name_zh": "親密", "name_en": "Intimacy", "suit": "water", "value": "contribute", "insight": "AI 拉近距離，但真正的親密，需要你願意被看見的脆弱。", "question": "你願意在團隊面前，承認自己的不確定嗎？", "glyph": "water"}, {"name_zh": "轉向內在", "name_en": "Turning In", "suit": "water", "value": "align", "insight": "AI 處理外務，把注意力轉向內在，答案常在那裡。", "question": "你向外尋找答案時，有沒有先問過自己？", "glyph": "water"}, {"name_zh": "和諧地融合", "name_en": "Harmony (Ten of Water)", "suit": "water", "value": "align", "insight": "AI 串連全局，圓滿的融合，是各方歸於一致的狀態。", "question": "你身邊的關係，是消耗你，還是滋養你？", "glyph": "water"}, {"name_zh": "雲之王", "name_en": "King of Clouds", "suit": "clouds", "value": "transcend", "insight": "AI 提供分析，但清明的決斷，是穿透思緒迷霧的能力。", "question": "你的決定，是想清楚了，還是被情緒推著做的？", "glyph": "clouds"}, {"name_zh": "雲之后", "name_en": "Queen of Clouds", "suit": "clouds", "value": "transcend", "insight": "AI 整理混亂，道德感的拿捏，仍需你自己的價值判斷。", "question": "效率與原則衝突時，你守得住底線嗎？", "glyph": "clouds"}, {"name_zh": "雲之騎士", "name_en": "Knight of Clouds", "suit": "clouds", "value": "align", "insight": "AI 提示風險，但別讓焦慮主導，思緒的雲終會散去。", "question": "你正在擔心的事，有多少真的會發生？", "glyph": "clouds"}, {"name_zh": "雲之侍者", "name_en": "Page of Clouds", "suit": "clouds", "value": "transcend", "insight": "AI 給你資料，理性的思辨，是把資料轉成洞見的橋。", "question": "你接收的觀點，是照單全收，還是經過思辨？", "glyph": "clouds"}, {"name_zh": "意識", "name_en": "Consciousness (Ace of Clouds)", "suit": "clouds", "value": "align", "insight": "AI 處理運算，但保持清醒的意識，是不被資訊淹沒的根基。", "question": "在無盡的資訊裡，你的意識是清醒的嗎？", "glyph": "clouds"}, {"name_zh": "道德感", "name_en": "Morality", "suit": "clouds", "value": "transcend", "insight": "AI 沒有立場，價值的選擇，永遠是人類無法外包的責任。", "question": "當 AI 給出答案，你問過它「應不應該」嗎？", "glyph": "clouds"}, {"name_zh": "比較", "name_en": "Comparison", "suit": "clouds", "value": "transcend", "insight": "AI 提供基準，但比較若失了分寸，會偷走你的篤定。", "question": "你的不安，是來自事實，還是來自比較？", "glyph": "clouds"}, {"name_zh": "政治", "name_en": "Politics", "suit": "clouds", "value": "contribute", "insight": "AI 中立呈現，穿越組織政治，靠的是貢獻價值的真本事。", "question": "你花在角力上的力氣，有沒有用在創造價值上？", "glyph": "clouds"}, {"name_zh": "悲傷", "name_en": "Sorrow", "suit": "clouds", "value": "align", "insight": "AI 無法替你感受，但允許悲傷流過，是身心一致的誠實。", "question": "你有沒有給自己空間，好好感受一次低落？", "glyph": "clouds"}, {"name_zh": "再生", "name_en": "Rebirth", "suit": "clouds", "value": "transcend", "insight": "AI 加速迭代，每一次重來，都是超越過去自己的機會。", "question": "若可以重新開始，你會用不同的方式做哪件事？", "glyph": "clouds"}, {"name_zh": "頭腦", "name_en": "The Mind", "suit": "clouds", "value": "align", "insight": "AI 是強大的頭腦，但別讓思考淹沒了當下的覺知。", "question": "你是頭腦的主人，還是被它牽著走？", "glyph": "clouds"}, {"name_zh": "反挫", "name_en": "Reversal", "suit": "clouds", "value": "transcend", "insight": "AI 預示轉折，挫折不是退步，是換個方向的契機。", "question": "這次的反挫，想教會你什麼？", "glyph": "clouds"}, {"name_zh": "負擔", "name_en": "The Burden", "suit": "clouds", "value": "transcend", "insight": "AI 替你分攤，放下不屬於你的責任，思緒才能輕盈。", "question": "你扛的，有哪些其實不該由你獨自承擔？", "glyph": "clouds"}, {"name_zh": "重生", "name_en": "Rebirth (Ten of Clouds)", "suit": "clouds", "value": "transcend", "insight": "AI 終結舊循環，最深的黑暗後，是思維的徹底更新。", "question": "你願意讓哪一個舊想法，徹底地死去？", "glyph": "clouds"}, {"name_zh": "彩虹之王", "name_en": "King of Rainbows", "suit": "rainbow", "value": "contribute", "insight": "AI 優化資源，但豐盛的真義，是讓價值流動而非囤積。", "question": "你創造的價值，有沒有真正流向需要的人？", "glyph": "rainbow"}, {"name_zh": "彩虹之后", "name_en": "Queen of Rainbows", "suit": "rainbow", "value": "contribute", "insight": "AI 盤點全局，務實的滋養，是把理想落地成果實。", "question": "你的好點子，有多少真正落地了？", "glyph": "rainbow"}, {"name_zh": "彩虹之騎士", "name_en": "Knight of Rainbows", "suit": "rainbow", "value": "align", "insight": "AI 鋪設路徑，腳踏實地的步伐，讓夢想長出根來。", "question": "你是空想，還是已經踏出第一步？", "glyph": "rainbow"}, {"name_zh": "彩虹之侍者", "name_en": "Page of Rainbows", "suit": "rainbow", "value": "align", "insight": "AI 提供工具，理解後的應用，才讓資源真正生效。", "question": "你手上的工具，是真的會用，還是只是擁有？", "glyph": "rainbow"}, {"name_zh": "成熟", "name_en": "Maturity (Ace of Rainbows)", "suit": "rainbow", "value": "transcend", "insight": "AI 累積經驗，成熟，是在不確定中持續做出好判斷。", "question": "面對沒有標準答案的局面，你靠什麼站穩？", "glyph": "rainbow"}, {"name_zh": "此刻", "name_en": "This Moment", "suit": "rainbow", "value": "align", "insight": "AI 把時間還給你，剩下的功課，是把心安放在當下。", "question": "身、心、念三者，此刻是否在同一個地方？", "glyph": "rainbow"}, {"name_zh": "妥協", "name_en": "Compromise", "suit": "rainbow", "value": "transcend", "insight": "AI 算出平衡點，但何時堅持、何時退讓，是你的智慧。", "question": "你的妥協，是雙贏，還是委屈了自己？", "glyph": "rainbow"}, {"name_zh": "平凡", "name_en": "The Ordinary", "suit": "rainbow", "value": "align", "insight": "AI 處理非凡的複雜，平凡的踏實，反而是最深的力量。", "question": "你能在平凡的日常裡，看見它的珍貴嗎？", "glyph": "rainbow"}, {"name_zh": "疲倦", "name_en": "Tiredness", "suit": "rainbow", "value": "align", "insight": "AI 接手過勞，休息不是偷懶，是讓你能走得更遠。", "question": "你有多久，沒有真正地休息了？", "glyph": "rainbow"}, {"name_zh": "我們", "name_en": "We Are the World", "suit": "rainbow", "value": "contribute", "insight": "AI 連結眾人，一個人的貢獻，匯入「我們」才成就價值。", "question": "你的成功，有沒有把身邊的人一起帶上？", "glyph": "rainbow"}, {"name_zh": "瞬間的領悟", "name_en": "Breakthrough", "suit": "rainbow", "value": "transcend", "insight": "AI 鋪陳線索，但那道靈光乍現，仍屬於準備好的你。", "question": "你最近一次的恍然大悟，是怎麼來的？", "glyph": "rainbow"}, {"name_zh": "旅程", "name_en": "Slowing Down (Knight)", "suit": "rainbow", "value": "align", "insight": "AI 加速抵達，但旅程的風景，值得你偶爾放慢腳步。", "question": "你是在趕路，還是在好好走這段路？", "glyph": "rainbow"}, {"name_zh": "壓力", "name_en": "Harmony", "suit": "rainbow", "value": "align", "insight": "AI 分擔重量，在豐盛裡保持身心平衡，才是真正的富足。", "question": "你擁有得越多，心是更自由，還是更沉重？", "glyph": "rainbow"}, {"name_zh": "豐富", "name_en": "Abundance (Ten of Rainbows)", "suit": "rainbow", "value": "contribute", "insight": "AI 放大產出，豐盛的最高形式，是樂於與人分享的滿溢。", "question": "你的豐盛，是緊握，還是願意分享出去？", "glyph": "rainbow"}, {"name_zh": "師父", "name_en": "The Master", "suit": "master", "value": "transcend", "insight": "前面 78 張，是 AI 給你的 78 種專家思維。但第 79 張是你——掌握自己思維、不被外界奴役的人。AI 是 79 種專家思維，而思維決策的過程，才是我們最終的行動產出。", "question": "與 AI 同行，用決策創造價值——這是 CMoney 前往未來的唯一方向。準備好成為自己的師父了嗎？", "glyph": "master"}];
+/* ===== 內嵌資料：兩個 LOGO + 79 張牌（由建置腳本注入）===== */
+var LOGO_WORDMARK = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAABmCAYAAADCrUaUAAAXK0lEQVR4nO2df1BUV5bHb4slwtIEWraWplsi2s2vCkKIdDtsDIFOtqRJzYhJXCspY2KsbGLUklQlMUj5hwVq1iqkFKOzxcZfky3HGElmFK1KkCGmTEBHRacEaYwGu4HUYIN0Lz9MTO8fzst2SP94775z3w/6fKqoUrrfvbffa+6593vOPYcQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEHUgkbuARgN+iiDQR9rNCQn/lNs7Mzqb85d53NdbandOjo2NuZyDfz9trPvrnto+J7T1X+f9XjNprQZrPsghBBHz8170G2qeewIgsAjuQEwm9JmpJvm6symtNS3TjW1QbdfW2q3dly91tNx9dqQ2z3sg2zbasnXfnxnYASyzWAsS0p+6Ju2i2B9FRcV6g46b92Bai8UNk10NBoBBFE+06XqqGyxLXmvo7Of+CYIcXQ++GHAz0YlMZbUvvCc9ZvzF7sgJ1KpSDfNTYYct9mUZiDOW1DNIQgyBWC6AzCb0maULbblsVjpCwViRS3lDoAQQlJv9IE9n955KaC7oVDgDgBB1ME0Vg2veOFZc7NvYkIJkz8hhBwdHLjbOy/FJ5UODoFOlwBiAIwGfRREOwiCTC3ADUBxUaGud16Kr6bt627otiFo9k1MlC22Jcs9Dj6km+dqIdoxm9IegmgHQZCpBagBeK68LFUqR6MY9jo6+1979cUcuccRjnTTXBBDZTalGSDaQRBkagEiMeh0CZrLibE/QbQlNUJ0dql9AITA+AGk1P8JQR8AgqgF0TsANU/+hEg/OQpFrB8A9X8EQYIhygCoffLnWPHCs2a5xxCM3JzsRDHXo/6PIEgwRBmAqTD5E0JITdvX3cVFhTq5xxEIsfo96v8IggSD2gA8V16WCjkQuTnovHVHiXJJ1V9arsh5PYIgUxcqA2C15Gtrr1z6DnowcvNcedljco8hELSGSU1nHhAEkR7BBkCnS9BIHQkjFW+dampTohREq+MbDfo46LEgCDJ1EGwAyhbbTCwGohSUeI4hNyeb6p7TXocgSGQgKMRQyqifivl5DztdA0Nu99AE97uYmTOjZhtTHmKVSZTjDXOW/uTp5oHJv5fjHAAHzXkAuUJc8RwAgqgDQdlAyxbbTKTta1ZjIbWlduvJ082XHT0375EbfQHfc+VvnWOEkIFDuoRpZYttJhYpJ/Y6OvtTFVArwR+zKW2GkEnVbEqbQXwT4d+IIEjEwtsA6HQJGpb5fVYa58xqqW9w832/2z3sO/w/nzhO6hKmsdiVFBcV6lpaz/EeD2vSTXN1jp6bv9qVBMNo0MfRpH+uLbVblZLAjw9cQaFAr7lc/aNSFAlSApPvg8fj/eFaZ/e4nGPiCxfkwI3f4/H+MDLi+YEQQiLl+ckFbwNgNs2NI3d4zz+CKBz3TXe2nqN60G73sC/VPayBljtyc7JNLa3n2iHbJOSBtLXzymXBEVRmU1oqIYT3A8jNyTbRGABHz81ewRdJgNGgj3q6ZJE5M8OU+ebrLzfStLFtR31J+4XLVzu7HEPQE8vTtieSsjJMc8S0cfyzU5f4juuVFcsyhdyLdRVVWZ+fOeuQc0K1WvK12Rkmg1KeIcQz4/B4vN79h492QbRlNOijlv6u9FEpxsRb5mClJxeO+6ZDfSmhxzh5bBA+gGdiHoo9MXZ3lOZaIX4A2nth00RHN/smRGlHUD4AqyVfa12Ql7F1y8bzYtsKBOSk+J81m8rX/MfK42LasNmXx7e1X/QEe91qydc2Nx0R7YOyLHomRqrdgdWSr32q+PEF77299gyL9vfsO1B+/E+nm0Pdt1Bjg7ifHHFJ6SCy8dIl9tmHGupEL8T27DtQ/m7V1k9DvYdXFBCrA1JvmLP0kCsSmyY6Gqqt6ieL50O15c/Y+Dj15+Ub108b/19barfSXAeN1ZKv9Q52+5qbjoywmvwJIWT3zurOro7WH72D3T6rJR8k9TYruPsB0Vb72RNjm95dXwzRVjCWLrHP5sbMavInhJA3X3+5sbnpyIh3sNu3dIl9tpBraYxGKIT2HwyIyZ8QQo7/6XRzuPfwMgCs8skEirQRg6Pn5r1N1t+k01xbMT/v4ednJcfnDY1OS73Rp/mv//7oKqvt8lvzH32Y5rrcnGxe6aFp4//lln+MBn0U5EQnhOamIyPvV1cuUdppcM4YQrf73ttrz3gHu33Qn5cbL9QkJoRDDXW9Qo35uoqqLMj+odqCgI+B42UAWMSTL0tKZmJUWlrPfRvuPbWldusb5iy9TRMdnXqjT5N6o0/zSWNTb1v7RQ90IflAOHpu/p3mOqNBz8sA0D6v7p5vZXN6v7JiWWZXR+uPcvVPyIPVZFdH64/r16xaIOc4ONavWbWAtTGEvOeb3l1fLIfxnkxz05ERvjscKN0eCqid6LYd9SV83sfLALCICmFVqN3p6r8/WcqoWliY4b+6r6tvaD95unlArlj1jqvXxmiu4/scaJ+XXPfDO9jt272zulOOvgOxdcvG8yxW3UJYv2bVApbylz9iPyu3c2Mp9QhFyA6H72TJB7ET+LO/K30KYhwH//Dxl3zeF9YAsNgSVy0szIBu059jjSf/6r+6P/TRsW6pVvesCafvq0n/5yYOqfvlCwuJhA9STv4cr6xYlklzndGgj5J75xaKro7WH8M9wy9avroA1d9TxY+L2j2KDSTg4CtfhzUAs3SJ4AnFOq5cuw3dpj9OV/99pZ9EZeUHUIv+r/SJg4PPBAKJHJM/IQ8c4kKvUdMzDPU6pDNYzC4oK9MMEsTy0uoNvDM189kBgGv1tBLIVILWDxAuC6ta9H81TBwcUo31qeLHZZn8OYT4PtQy+XOE22na7MvjofqilYEWFjyaBtF/+/lLgdMoBCD8DmBWItiNQf4fVkZQDfq/kmWfYLAOmyRE3OoRAiHGR02TP0comQtyF0ArA0H4wfbsO1AuJHoxrAHQJSYkiBrRJJQSa64EaO/FQmt+QKOsBv1fKRE2Qnnv7bVnlH5WAAJDSnJYuUutz3D3zurO7Kz0mcFer9y8vQCiHzkNOZ/Yf3/CGgDoCKDRsbGIl384nK5+qnMQxhR9QqDfp5vmUtUykEr/Nxr0UXJKHGJRQogja/7N9kTI+tgsnqHNvjw+LildM/knM7douhA9mw/tZ08EnX92ffAhmDM4lKEJxNO2J5Ig+hW6kxFVE5gGt3v4rtR9KpWOq9eoDEAwP8A/8gUJRir9f/2aVb9l1fa2HfUllZu3F1Ru3l7wwe8PLmXVD9RpT6WSmWEKGQ0E+Qy37agviUtK1wSbtJyu/vvHP226nZlbJChrcThC7eSgvjtPFT/+iJD3P12yaJHYPvfsO1Au9JqwuSug8+sEy7WvBiByAU3Ok0N7fwPlBYJoy2xKm8EiFxB03hWOUHltWPUZKOcLRC4gpRAspw2k47dy8/YCoStuKN/Rth31JTXv72oJ9Brkd0ZIbiCIz5aZWyQ4r5rkOwDkl0D5AZSu/0NPxOsqqrLiktI1oZKatbVf9MQlpWugdwRQ23UhbNtRX/LS6g2pL63ekLquoiqL5S4nGJCrfxq5BWonEEqjh84PxAeo8E+a1DVoAGSG1g+QbpqbPOn/itX/oePo11VUZQk5wv/Ophqq1MPBaPxjA1UILw2coat5f1fL8U+bbh//tOn2/sNHu97ZVNMILY2EA2qHQxty6XT134dy1IaS8qDyA/E9XAcR/knrK0EDIDO0foDqb85d9/+/kvV/iNzmHHv2HSinyd8ClapXSiyLnokJ9Vmdrv77LD5XoEggyAgoMavs45+dugQxhlCJ26DyA/EN64QI/xQS++8PGgCZERN/r9Ml/PzHr+T4f8iokd179/+Z9lqo1SMh9KkT+LKuoiqLb85+yENMwRCb4oBDbFSPVAVtIL8rUkB7X9AAKABaHT43JzuREGXr/5Dyj9BDLpOBDPMLFy0jFiGrUCl0a6jY9q7rPaLlMyj/R6hQTajvSrioMQh/Uvm/r/5n2mslNwAxMTPBcwupHVo/wGxjShIhytb/szLNiVBtfdHy1VdQbYmFtqQhH2iyU6plxQpRiayzywGSOda6IG8ORDth+ngs1OsQ4Z+fN385SHutpE4kQgiJjY0RdEAiEhDjBzhEiMZsSkslFH8TUuj/UDVXCRH3RedYV1GVpaTU04GgyU7Zeb3nFoOhEEJgd3EQvgStNo4q4eFk/rGLC7rTstmXx4uNXnvz9Zcb363aGtRPI9axThP7709YA1D9ZPH8qr+0XBHTiT8zZ8KVbZwqOHpu3iPzUqiuNRr0UUrW/40GvaIOTjn7BkQbEY7srPSZLGrr0kg6Ix6vqLMboTAY9LFQbSnpNHW4yRlKWrNa8rWB2oII/zz40bHTYq4PKwGNj4s7FDQZSGMSig1rV1ueLben0urjUkOrx9sXl2RL2Z9QlHY4yunqB9PLMzNM1NqrmojXxkXsog1CWgvmQIcI/xS7AAlrAG47+8BWTFKh0yVo3jrV1LbzyuXvmn0TE73zUnwrXnjWPP+RrBi5xxYMWj8ArUGVu/6vXHg8XtVlsZQbrTZOsX83rIFwBgdzoIuVIiHyJIU1AG73MHjyNtYFNsymub/SCGvavu4+MXZ3tHdeim/D2tWWhdb8eP8wSrmh9QPQImf9XxrEap0IQgtEyUgWmWRpY//9Cb8DcPWBa5xmUxqTgvAcuTlZc0K9/tapprajgwN3LyfG/tQ7L8WnBKlI6gpmSq+YhiBSwCf9NUTJSOuCvF+UwYUI/4Q4E8FnBwBevIMLX2SBTpegESqLKEUqkkqXV2NNBpZhlwgSCghn8OTDkGLDP6HSZPM6B1D9ZPF8iM5+bm9SGgNIfmN57F/EXO8vFb326os5UOPig1S6fKTq/4TARrS4+gaGodpC5MHVN8BrFQ1x2tp/tyE2OOL4p00gddV5GQBHz00XRGf+FBcVUh1eCoVOl6DZ6+jsh2ovNiZG0p2AVLq8lPq/HFkrQwEZ0eLxeH+AakvJeDzeiC/iBLEL4IrtiA3/hPSH8ToI1tJ6zk0bpx6Mg85bd1J51CMQQknRv84mV0ByRRFC6CNzaBFzHkBwPxLhdPWDrFSggDyYxuIMgBLp7HIMQbUFXeFLSio3by8Qk9dq987qzv2Hj2rEhn8KLfsYCt4ngWtL7Vbo8pDPlZelHms8CSJHGA36qGCVsmiROjKHEDb3eXL7pL6BVfO/wtk38D1UW8EO1AhBzSUp5QIyARuUdCEHuz748MLWLRtFtyM2/BMy9xPvXEAdV6/1QHXKUXvl0ncQUpBOl6A5N1MDHt8tR6QMa31eav0fIlSNAyojJQQQoYGRCItwSDWxfs0qUd9hqFoFHLwNQEvrOSa68UHnrTtli23J4d8ZGJ0uQXM5MfYnyDER8qB0JXSbfGCtz0sd/w+5ehSbkRKyni9EaKCagDJ4k8Mh1YZYZ7DYHejnZ846xFw/GUHZQFlNinsdnf2981J8QmPxyxbbkllM/oQQ8nX7X8GkCyGw3nXIsauBzFQpZgUVqgiIUOQoHSgnUAZP7RKc3M8duh6CIAPAupg7F4tfttiWbDalzdDpEjT+P/MfyYopLirUvfbqizm981J8kBE//lQtLMxgcf6BL6zi9OWK/2+7cBks7Hfrlo3nQ+VxD4bYrbc/kXgqGXLiU7sMBC3D8IWFA11wOuiVxjmzDjpv3YEeiD8/T+yJk0K2x+4S4rxLiPMWy+7JiVNfgG6zhMJKp5cr/h961dR+9sRYZm7RdL6rofVrVi1QSlUyNSM2CoajuenICG0pS6NBH9XV0foLf9+efQfKRzzeux6P1+PsG/je4/GOjXi8Ey5X/yiLCmL7Dx/t2r2zGrrZsLBwoAs2ACxCQpVE1cLCDPdHx2Rb/RPCTqeXM/8PRG51f7o6Wn+s3Ly9IFSyrkCThVjEViVTM5+fOXsVIgqGkAdGWWiitWDPU+gp8T37DpR3Xe/pElP7F8oY8oXVrpOqIphNM3Vz+su9+ieEnU4vZ/4fFtrp1i0bz3sHu33vV1cueWXFssylS+yzly6xz35lxbJM72C3D3ryJyRyV/+EENLZ5QBLDb91y8bzm95dX8z3/U/bnkiCep5vvv5y412P93/FtAFZXpQPkLH//lAZAEfPzXtyRcmwZKVxziw5tX9/oPV6vu2NjY0zW91m5hYxqUD35usvN+7eWd15qKGu91BDXS+ril/bdtSXROrqnwOyAP17b6894x3s9oWKzrJa8rXewW5f4x8bRNcS9kdt5xFYOZ+pawKfPN08oMakYsGofrJ4PqtQVxqgz13w1f9Hx8aYRFUR8iCCQS4HGgQ17+9qkXsMctPWftEDfQbiUENdr3ew2xfoh0UFMaiFCKQxDAXLMyeiisLX1Te0Qw1Ebo41nvyb3GPwx+nq90K2p5T8/2J0VzlhtXtRI2o2hJWbtxdA7eKkCgk9+IePv2TVtigDQAgheUOjotuQm7yh0WlKkX44oPV6JeX/p40AkQvISWOqYFn0jOqqhG3bUV8Crd1DnnEJBsvvnujJ2+0e9qnZCBSO+6YrbfLngJLYlCjVqWVFHS7SKFK51tk9rjY5j8XOhfV3g3XyPJCJmzMCSpxoQlE47uMdSy4HUH4AJeb/d7r67yvdCODkH5r9h492SbEChoDlrpOlRg+ZSysQYCt3t3vYV1ff0K6W6KC8odFpSp78CYHzAyhF/5+M09V/Py4pXaO0mgGEPDjtiZN/eHZ98OEFJe8EPvj9waWsJUdWeaGkOHMCLt2cPN08oGRJqGJ+3sOpN/o0SpV9/IHS7ZWk/wfinU01jUqaRCyLnolRq7NaDvYfPtqlRJ/AuoqqrHc21TAvJcrKGcwq9t8fJhO12z3sS73Rp1lpnDOLRfs01JbarYXjvumfNDYpTg4JhVhZTS2y3P7DR7syc4umy7kbqNy8vSAuKV0TKYVeILnW2T0u9/PzR2ojziIkVIooI6Yr9ZbWc+7UG32a52clx8s1EdWW2q02TXR0XX1Du9Iln0CI9QMoUf8PhtPVf/+dTTWNUk8k3MSPko84uOcnVXx8IF5avSFVDiMOPVlLlXBQEqmmrf2ip66+oT1vaHTa87OS46GLzE+mttRuXWmcMyv1Rp+mrr6hXekSSCjE+gGUqv+Hwt8QsIqC2LajvsRmXx6PEz88be0XPXFJ6ZrM3KLpUhTO8X+Wcp7whfysUqUckTUe22jQRxkM+lijITlxtiElmbYUYtXCwozbzr5Bp6vfy3Ky1+kSNGbT3DgxbTh6vvUK9T+ISZ9LszIRm66X5jPywWrJ12ZnmAw0qR627agv6bze09N+/lIfi52g1ZKvNaQkJ4htx+Pxjn3e/OUgzbVQBW9YTKJGgz4qK9OcaFmQlyOmsA+X+ZPls6TFO9gN9p2X6qyMYg/k6HQJIcemBicuIh1Ggz6K+7eSJgUkPP7PbjJqeZZWS74WKm3FS6s3pEq1k1GsAUAQBFELkKt/IbUuxKLYcE0EQRA1AF1tTspdDxoABEEQSqCrzUkR++8PSkAIgkQ83sFuX+Xm7QVtFy5f5xM4Aan5+yN1okQ0AAiCRDyhNHz/mHyh5SeFIKXzlwMNAIIgEQ+kE5cWKZ2/HOgDQBAk4pE7hYVcNSfQACAIEvE4Xf2y1gg+/tmpS3L0iwYAQZCIx9k38L1cfa+rqMqS68AbGgAEQSIej8c7JlffcqYeRwOAIEjE09nlGJKjX7mr4qEBQBAk4pFDgpFT+uFAA4AgCCIxlZu3Fyih6pyii3IjCIJMNWz25fFSVPviA+4AEARBJICrPKeUyZ8QNAAIgiCEEHaHwZRcchRTQSAIgvhhteRr47Vx0caU5CStNi7OkJJsFJIDiHX1OQRBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBIpP/A5RwOJPHLfr1AAAAAElFTkSuQmCC";
+var LOGO_C_MARK = "data:image/png;base64,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";
+var CARDS = [{"name_zh": "傻瓜", "name_en": "The Fool", "suit": "major", "value": "transcend", "insight": "AI 替你算盡風險，但敢縱身一躍的，永遠是人。它讓你帶著清醒去冒險。", "question": "若失敗的成本被資料看透了，你還願意為什麼縱身一躍？", "glyph": "fool"}, {"name_zh": "存在", "name_en": "Existence", "suit": "major", "value": "align", "insight": "AI 處理外在的雜訊，把你帶回最單純的存在——專注於此刻真正重要的事。", "question": "剝除所有頭銜與工具，你存在的價值是什麼？", "glyph": "existence"}, {"name_zh": "內在的聲音", "name_en": "Inner Voice", "suit": "major", "value": "align", "insight": "AI 給你眾多外部觀點，但最終的拍板，要回到你內在那個清楚的聲音。", "question": "當所有數據都指向一個方向，你內在的聲音同意嗎？", "glyph": "inner_voice"}, {"name_zh": "創造力", "name_en": "Creativity", "suit": "major", "value": "contribute", "insight": "當執行被 AI 自動化，創造力成為你貢獻價值無可取代的核心。", "question": "若不必再做重複的事，你想創造出什麼以前沒空做的東西？", "glyph": "creativity"}, {"name_zh": "反叛者", "name_en": "The Rebel", "suit": "major", "value": "transcend", "insight": "AI 看穿舊規則的低效，反叛不是叛逆，是對更好方式的忠誠。", "question": "哪一條你習以為常的規則，其實早該被你親手打破？", "glyph": "rebel"}, {"name_zh": "空", "name_en": "No-Thingness", "suit": "major", "value": "align", "insight": "AI 清空了你的待辦，留白不是空虛，是讓重要決策浮現的空間。", "question": "當行事曆被清出一片空白，你會用它思考什麼？", "glyph": "emptiness"}, {"name_zh": "戀人", "name_en": "The Lovers", "suit": "major", "value": "contribute", "insight": "AI 媒合最佳組合，但真正的協作，來自人與人之間的信任與共鳴。", "question": "你與團隊之間，是分工，還是真正的共鳴？", "glyph": "lovers"}, {"name_zh": "覺知", "name_en": "Awareness", "suit": "major", "value": "align", "insight": "AI 照見你思考的盲點，覺察，是一切改變的第一個動作。", "question": "你上一次意識到自己想錯了，是什麼時候？", "glyph": "awareness"}, {"name_zh": "勇氣", "name_en": "Courage", "suit": "major", "value": "transcend", "insight": "工具放大了能力，真正稀缺的，是敢於承擔判斷的那個人。", "question": "當資訊都齊備了，你敢不敢成為拍板的那個人？", "glyph": "courage"}, {"name_zh": "單獨", "name_en": "Aloneness", "suit": "major", "value": "align", "insight": "AI 永遠在線，但深度的決策，需要你獨自面對的安靜時刻。", "question": "你有多久沒有在無干擾中，與自己的判斷獨處？", "glyph": "aloneness"}, {"name_zh": "改變", "name_en": "Change", "suit": "major", "value": "transcend", "insight": "AI 讓變動成為常態，與其抗拒輪轉，不如成為駕馭它的人。", "question": "面對不會停下的改變，你選擇被推著走，還是主動轉向？", "glyph": "change"}, {"name_zh": "突破", "name_en": "Breakthrough", "suit": "major", "value": "transcend", "insight": "舊流程的牆一旦被看穿，AI 就是你拆牆的槓桿。", "question": "哪一道限制，是你一直繞過、卻從未正面突破的？", "glyph": "breakthrough"}, {"name_zh": "新的洞見", "name_en": "New Vision", "suit": "major", "value": "transcend", "insight": "AI 翻轉你的視角，讓你從倒掛的角度，看見原本看不見的解法。", "question": "若把問題整個顛倒過來看，你會發現什麼？", "glyph": "new_vision"}, {"name_zh": "蛻變", "name_en": "Transformation", "suit": "major", "value": "transcend", "insight": "AI 接手重複，讓你把心力投向真正需要判斷的決策。", "question": "若例行工作效率被放大十倍，你想拿回的時間用來超越什麼？", "glyph": "transformation"}, {"name_zh": "整合", "name_en": "Integration", "suit": "major", "value": "contribute", "insight": "散落各處的線索，AI 替你織成一張可被決策的全貌。", "question": "你習慣看見局部，還是願意退後一步看見整體？", "glyph": "integration"}, {"name_zh": "制約", "name_en": "Conditioning", "suit": "major", "value": "transcend", "insight": "AI 揭露你被訓練出來的慣性，看見制約，才有鬆綁的可能。", "question": "你引以為傲的經驗，會不會正是限制你的框架？", "glyph": "conditioning"}, {"name_zh": "雷電", "name_en": "Thunderbolt", "suit": "major", "value": "transcend", "insight": "AI 預警崩塌前的裂縫，危機不是終點，是重建更好結構的起點。", "question": "若舊的結構注定瓦解，你想在廢墟上蓋出什麼？", "glyph": "thunderbolt"}, {"name_zh": "寧靜", "name_en": "Silence", "suit": "major", "value": "align", "insight": "AI 隔絕雜音，寧靜不是無所事事，是讓清晰浮現的內在狀態。", "question": "在資訊的洪流中，你如何替自己保留一片寧靜？", "glyph": "silence"}, {"name_zh": "前世", "name_en": "Past Lives", "suit": "major", "value": "align", "insight": "AI 從歷史資料看見模式，但你不必被過去定義你的下一步。", "question": "你正在重複哪一個其實該放下的舊模式？", "glyph": "past_lives"}, {"name_zh": "純真", "name_en": "Innocence", "suit": "major", "value": "align", "insight": "AI 給你經驗的累積，但保持一顆初心，才能看見新的可能。", "question": "你還記得不被經驗綁住、單純探索的那種眼光嗎？", "glyph": "innocence"}, {"name_zh": "超越幻象", "name_en": "Beyond Illusion", "suit": "major", "value": "transcend", "insight": "AI 戳破數據的假象，超越幻象，是看清事情真正的樣子。", "question": "你正在相信的某個「理所當然」，會不會其實是幻象？", "glyph": "beyond_illusion"}, {"name_zh": "完成", "name_en": "Completion", "suit": "major", "value": "contribute", "insight": "AI 幫你收束每個段落，完成不是結束，是貢獻價值後的圓滿交付。", "question": "你手上哪一件事，值得被好好地畫下句點？", "glyph": "completion"}, {"name_zh": "火之王", "name_en": "King of Fire", "suit": "fire", "value": "contribute", "insight": "AI 放大你的影響力，真正的領導，是點燃他人而非取代他人。", "question": "你帶來的火，是照亮團隊，還是只燒亮自己？", "glyph": "fire"}, {"name_zh": "火之后", "name_en": "Queen of Fire", "suit": "fire", "value": "contribute", "insight": "AI 處理瑣務，讓你能用全副熱情，分享給真正重要的人事。", "question": "你的熱情，有沒有用在最值得的地方？", "glyph": "fire"}, {"name_zh": "火之騎士", "name_en": "Knight of Fire", "suit": "fire", "value": "transcend", "insight": "AI 鋪平道路，但全力衝刺的決心，仍要由你自己點燃。", "question": "你上一次全力以赴，是為了什麼？", "glyph": "fire"}, {"name_zh": "火之侍者", "name_en": "Page of Fire", "suit": "fire", "value": "transcend", "insight": "AI 給你嘗試的安全網，玩心與好奇，是創新最初的火花。", "question": "你有多久沒有純粹因為好玩而嘗試一件事？", "glyph": "fire"}, {"name_zh": "源頭", "name_en": "The Source (Ace of Fire)", "suit": "fire", "value": "contribute", "insight": "工具會更迭，貢獻的初心，才是不被取代的能量源頭。", "question": "剝開工具與職稱，你真正想為誰創造什麼？", "glyph": "fire"}, {"name_zh": "可能性", "name_en": "Possibilities", "suit": "fire", "value": "transcend", "insight": "AI 展開所有選項，但選擇走哪一條路，是你超越自我的起點。", "question": "眼前的可能性中，哪一個讓你既害怕又興奮？", "glyph": "fire"}, {"name_zh": "經驗", "name_en": "Experience", "suit": "fire", "value": "align", "insight": "AI 累積資料，但經驗的智慧，來自你親身走過的反思。", "question": "你的經驗，是越走越開闊，還是越走越窄？", "glyph": "fire"}, {"name_zh": "壓力", "name_en": "Stress", "suit": "fire", "value": "align", "insight": "AI 替你卸下負荷，但平衡身心的節奏，要由你自己守住。", "question": "你是在工作，還是被工作追著跑？", "glyph": "fire"}, {"name_zh": "精疲力竭", "name_en": "Exhaustion", "suit": "fire", "value": "align", "insight": "AI 接手過載，提醒你：耗盡自己，無法持續貢獻價值。", "question": "你正在燃燒的，是熱情，還是只是力氣？", "glyph": "fire"}, {"name_zh": "壓抑", "name_en": "Suppression", "suit": "fire", "value": "transcend", "insight": "AI 攤開被壓住的問題，看見它，是釋放能量的第一步。", "question": "你正壓抑著哪一個其實該說出口的判斷？", "glyph": "fire"}, {"name_zh": "玩興", "name_en": "Playfulness", "suit": "fire", "value": "align", "insight": "AI 降低試錯成本，讓工作多一點玩興，少一點僵硬。", "question": "你能不能在嚴肅的工作裡，保留一點遊戲的心？", "glyph": "fire"}, {"name_zh": "延遲", "name_en": "Slowing Down", "suit": "fire", "value": "align", "insight": "AI 加快了一切，但有些重要決策，值得你刻意慢下來。", "question": "哪一個決定，你其實需要再多給它一點時間？", "glyph": "fire"}, {"name_zh": "總和", "name_en": "Totality", "suit": "fire", "value": "transcend", "insight": "AI 整合片段，全心投入當下，才能發揮你的全部。", "question": "此刻的你，是全然投入，還是分心於別處？", "glyph": "fire"}, {"name_zh": "旅人", "name_en": "The Traveler (Ten of Fire)", "suit": "fire", "value": "transcend", "insight": "AI 卸下你不必扛的重擔，旅程的意義，在於輕裝前行。", "question": "你正背著哪些其實可以放下的負擔？", "glyph": "fire"}, {"name_zh": "水之王", "name_en": "King of Water", "suit": "water", "value": "contribute", "insight": "AI 分析人心，但真正的同理，來自你願意傾聽的那份心。", "question": "你聽見的，是話語，還是話語背後的需要？", "glyph": "water"}, {"name_zh": "水之后", "name_en": "Queen of Water", "suit": "water", "value": "align", "insight": "AI 處理流程，讓你有餘裕，照顧自己與他人的情緒流動。", "question": "你有沒有把照顧自己，放進每天的待辦？", "glyph": "water"}, {"name_zh": "水之騎士", "name_en": "Knight of Water", "suit": "water", "value": "align", "insight": "AI 給你資訊，但跟隨內心的方向，需要你信任自己的直覺。", "question": "當理性與直覺衝突，你會聽哪一個？", "glyph": "water"}, {"name_zh": "水之侍者", "name_en": "Page of Water", "suit": "water", "value": "align", "insight": "AI 提供結構，理解，是讓資訊真正流進心裡的能力。", "question": "你是在接收資訊，還是真正理解了它？", "glyph": "water"}, {"name_zh": "順流", "name_en": "Going with the Flow (Ace of Water)", "suit": "water", "value": "align", "insight": "AI 排除阻力，如水般順勢，是身心靈一致的流動狀態。", "question": "你是在逆流硬撐，還是找到了順流的方式？", "glyph": "water"}, {"name_zh": "友善", "name_en": "Friendliness", "suit": "water", "value": "contribute", "insight": "AI 連結節點，但溫暖的關係，是由真誠的善意累積而成。", "question": "你與同事之間，多了效率，會不會少了善意？", "glyph": "water"}, {"name_zh": "假面", "name_en": "The Mask", "suit": "water", "value": "align", "insight": "AI 看穿表象，卸下假面，才能與人真實地連結。", "question": "你在工作場合戴著的面具，累不累？", "glyph": "water"}, {"name_zh": "放下", "name_en": "Letting Go", "suit": "water", "value": "transcend", "insight": "AI 接住你放下的，學會鬆手，是超越執著的智慧。", "question": "你緊抓著哪一件其實該放下的事？", "glyph": "water"}, {"name_zh": "和諧", "name_en": "Harmony", "suit": "water", "value": "align", "insight": "AI 協調資源，真正的和諧，是內在與外在的同頻共振。", "question": "你的內在節奏，與外在的生活同步嗎？", "glyph": "water"}, {"name_zh": "理想主義之夢", "name_en": "Dream", "suit": "water", "value": "transcend", "insight": "AI 校準現實，但懷抱夢想的勇氣，是超越眼前的力量。", "question": "你還記得當初想做這件事的那個夢嗎？", "glyph": "water"}, {"name_zh": "投射", "name_en": "Projecting", "suit": "water", "value": "align", "insight": "AI 提供客觀視角，看清投射，才不會把假設當成真相。", "question": "你看見的對方，是真實的他，還是你的投射？", "glyph": "water"}, {"name_zh": "親密", "name_en": "Intimacy", "suit": "water", "value": "contribute", "insight": "AI 拉近距離，但真正的親密，需要你願意被看見的脆弱。", "question": "你願意在團隊面前，承認自己的不確定嗎？", "glyph": "water"}, {"name_zh": "轉向內在", "name_en": "Turning In", "suit": "water", "value": "align", "insight": "AI 處理外務，把注意力轉向內在，答案常在那裡。", "question": "你向外尋找答案時，有沒有先問過自己？", "glyph": "water"}, {"name_zh": "和諧地融合", "name_en": "Harmony (Ten of Water)", "suit": "water", "value": "align", "insight": "AI 串連全局，圓滿的融合，是各方歸於一致的狀態。", "question": "你身邊的關係，是消耗你，還是滋養你？", "glyph": "water"}, {"name_zh": "雲之王", "name_en": "King of Clouds", "suit": "clouds", "value": "transcend", "insight": "AI 提供分析，但清明的決斷，是穿透思緒迷霧的能力。", "question": "你的決定，是想清楚了，還是被情緒推著做的？", "glyph": "clouds"}, {"name_zh": "雲之后", "name_en": "Queen of Clouds", "suit": "clouds", "value": "transcend", "insight": "AI 整理混亂，道德感的拿捏，仍需你自己的價值判斷。", "question": "效率與原則衝突時，你守得住底線嗎？", "glyph": "clouds"}, {"name_zh": "雲之騎士", "name_en": "Knight of Clouds", "suit": "clouds", "value": "align", "insight": "AI 提示風險，但別讓焦慮主導，思緒的雲終會散去。", "question": "你正在擔心的事，有多少真的會發生？", "glyph": "clouds"}, {"name_zh": "雲之侍者", "name_en": "Page of Clouds", "suit": "clouds", "value": "transcend", "insight": "AI 給你資料，理性的思辨，是把資料轉成洞見的橋。", "question": "你接收的觀點，是照單全收，還是經過思辨？", "glyph": "clouds"}, {"name_zh": "意識", "name_en": "Consciousness (Ace of Clouds)", "suit": "clouds", "value": "align", "insight": "AI 處理運算，但保持清醒的意識，是不被資訊淹沒的根基。", "question": "在無盡的資訊裡，你的意識是清醒的嗎？", "glyph": "clouds"}, {"name_zh": "道德感", "name_en": "Morality", "suit": "clouds", "value": "transcend", "insight": "AI 沒有立場，價值的選擇，永遠是人類無法外包的責任。", "question": "當 AI 給出答案，你問過它「應不應該」嗎？", "glyph": "clouds"}, {"name_zh": "比較", "name_en": "Comparison", "suit": "clouds", "value": "transcend", "insight": "AI 提供基準，但比較若失了分寸，會偷走你的篤定。", "question": "你的不安，是來自事實，還是來自比較？", "glyph": "clouds"}, {"name_zh": "政治", "name_en": "Politics", "suit": "clouds", "value": "contribute", "insight": "AI 中立呈現，穿越組織政治，靠的是貢獻價值的真本事。", "question": "你花在角力上的力氣，有沒有用在創造價值上？", "glyph": "clouds"}, {"name_zh": "悲傷", "name_en": "Sorrow", "suit": "clouds", "value": "align", "insight": "AI 無法替你感受，但允許悲傷流過，是身心一致的誠實。", "question": "你有沒有給自己空間，好好感受一次低落？", "glyph": "clouds"}, {"name_zh": "再生", "name_en": "Rebirth", "suit": "clouds", "value": "transcend", "insight": "AI 加速迭代，每一次重來，都是超越過去自己的機會。", "question": "若可以重新開始，你會用不同的方式做哪件事？", "glyph": "clouds"}, {"name_zh": "頭腦", "name_en": "The Mind", "suit": "clouds", "value": "align", "insight": "AI 是強大的頭腦，但別讓思考淹沒了當下的覺知。", "question": "你是頭腦的主人，還是被它牽著走？", "glyph": "clouds"}, {"name_zh": "反挫", "name_en": "Reversal", "suit": "clouds", "value": "transcend", "insight": "AI 預示轉折，挫折不是退步，是換個方向的契機。", "question": "這次的反挫，想教會你什麼？", "glyph": "clouds"}, {"name_zh": "負擔", "name_en": "The Burden", "suit": "clouds", "value": "transcend", "insight": "AI 替你分攤，放下不屬於你的責任，思緒才能輕盈。", "question": "你扛的，有哪些其實不該由你獨自承擔？", "glyph": "clouds"}, {"name_zh": "重生", "name_en": "Rebirth (Ten of Clouds)", "suit": "clouds", "value": "transcend", "insight": "AI 終結舊循環，最深的黑暗後，是思維的徹底更新。", "question": "你願意讓哪一個舊想法，徹底地死去？", "glyph": "clouds"}, {"name_zh": "彩虹之王", "name_en": "King of Rainbows", "suit": "rainbow", "value": "contribute", "insight": "AI 優化資源，但豐盛的真義，是讓價值流動而非囤積。", "question": "你創造的價值，有沒有真正流向需要的人？", "glyph": "rainbow"}, {"name_zh": "彩虹之后", "name_en": "Queen of Rainbows", "suit": "rainbow", "value": "contribute", "insight": "AI 盤點全局，務實的滋養，是把理想落地成果實。", "question": "你的好點子，有多少真正落地了？", "glyph": "rainbow"}, {"name_zh": "彩虹之騎士", "name_en": "Knight of Rainbows", "suit": "rainbow", "value": "align", "insight": "AI 鋪設路徑，腳踏實地的步伐，讓夢想長出根來。", "question": "你是空想，還是已經踏出第一步？", "glyph": "rainbow"}, {"name_zh": "彩虹之侍者", "name_en": "Page of Rainbows", "suit": "rainbow", "value": "align", "insight": "AI 提供工具，理解後的應用，才讓資源真正生效。", "question": "你手上的工具，是真的會用，還是只是擁有？", "glyph": "rainbow"}, {"name_zh": "成熟", "name_en": "Maturity (Ace of Rainbows)", "suit": "rainbow", "value": "transcend", "insight": "AI 累積經驗，成熟，是在不確定中持續做出好判斷。", "question": "面對沒有標準答案的局面，你靠什麼站穩？", "glyph": "rainbow"}, {"name_zh": "此刻", "name_en": "This Moment", "suit": "rainbow", "value": "align", "insight": "AI 把時間還給你，剩下的功課，是把心安放在當下。", "question": "身、心、念三者，此刻是否在同一個地方？", "glyph": "rainbow"}, {"name_zh": "妥協", "name_en": "Compromise", "suit": "rainbow", "value": "transcend", "insight": "AI 算出平衡點，但何時堅持、何時退讓，是你的智慧。", "question": "你的妥協，是雙贏，還是委屈了自己？", "glyph": "rainbow"}, {"name_zh": "平凡", "name_en": "The Ordinary", "suit": "rainbow", "value": "align", "insight": "AI 處理非凡的複雜，平凡的踏實，反而是最深的力量。", "question": "你能在平凡的日常裡，看見它的珍貴嗎？", "glyph": "rainbow"}, {"name_zh": "疲倦", "name_en": "Tiredness", "suit": "rainbow", "value": "align", "insight": "AI 接手過勞，休息不是偷懶，是讓你能走得更遠。", "question": "你有多久，沒有真正地休息了？", "glyph": "rainbow"}, {"name_zh": "我們", "name_en": "We Are the World", "suit": "rainbow", "value": "contribute", "insight": "AI 連結眾人，一個人的貢獻，匯入「我們」才成就價值。", "question": "你的成功，有沒有把身邊的人一起帶上？", "glyph": "rainbow"}, {"name_zh": "瞬間的領悟", "name_en": "Breakthrough", "suit": "rainbow", "value": "transcend", "insight": "AI 鋪陳線索，但那道靈光乍現，仍屬於準備好的你。", "question": "你最近一次的恍然大悟，是怎麼來的？", "glyph": "rainbow"}, {"name_zh": "旅程", "name_en": "Slowing Down (Knight)", "suit": "rainbow", "value": "align", "insight": "AI 加速抵達，但旅程的風景，值得你偶爾放慢腳步。", "question": "你是在趕路，還是在好好走這段路？", "glyph": "rainbow"}, {"name_zh": "壓力", "name_en": "Harmony", "suit": "rainbow", "value": "align", "insight": "AI 分擔重量，在豐盛裡保持身心平衡，才是真正的富足。", "question": "你擁有得越多，心是更自由，還是更沉重？", "glyph": "rainbow"}, {"name_zh": "豐富", "name_en": "Abundance (Ten of Rainbows)", "suit": "rainbow", "value": "contribute", "insight": "AI 放大產出，豐盛的最高形式，是樂於與人分享的滿溢。", "question": "你的豐盛，是緊握，還是願意分享出去？", "glyph": "rainbow"}, {"name_zh": "師父", "name_en": "The Master", "suit": "master", "value": "transcend", "insight": "前面 78 張，是 AI 給你的 78 種專家思維。但第 79 張是你——掌握自己思維、不被外界奴役的人。AI 是 79 種專家思維，而思維決策的過程，才是我們最終的行動產出。", "question": "與 AI 同行，用決策創造價值——這是 CMoney 前往未來的唯一方向。準備好成為自己的師父了嗎？", "glyph": "master"}];
 
-</script>
 
-<script type="text/babel">
-const { useState, useMemo, useEffect, useRef } = React;
+/* ===== APPLY_URL ===== */
+var APPLY_URL = "https://www.104.com.tw/company/10r4uuvc?utm_source=zen_cards&utm_medium=landing&utm_campaign=hr_ai_recruit#info06";
 
-/* ============================================================
-   追蹤層：四個關鍵漏斗事件
-   page_view（瀏覽）→ draw_card（抽卡）→ cta_click（點連結）→ 轉換
-   轉換無法在前端直接得知（投遞發生在 104 站內），
-   解法：cta_click 帶 UTM 進 104，於 104 後台 / GA4 以 UTM 來源比對投遞數，
-   即為「成功轉換」。詳見檔尾說明。
-   ============================================================ */
+/* ===== 追蹤層 ===== */
 function track(event, params){
-  const id = window.CMONEY_GA4_ID;
-  if(id && typeof window.gtag === 'function'){
-    window.gtag('event', event, params || {});
-  } else {
-    console.log('[track]', event, params || {});
+  var id = window.CMONEY_GA4_ID;
+  if(id && typeof window.gtag==='function'){ window.gtag('event', event, params||{}); }
+  else { console.log('[track]', event, params||{}); }
+}
+
+/* ===== SVG 工具 ===== */
+var SVGNS="http://www.w3.org/2000/svg";
+function el(tag, attrs, parent){
+  var e=document.createElementNS(SVGNS, tag);
+  for(var k in attrs){ e.setAttribute(k, attrs[k]); }
+  if(parent) parent.appendChild(e);
+  return e;
+}
+
+/* ===== 幾何牌背 SVG ===== */
+function buildGeoBack(){
+  var cx=100, cy=158;
+  var svg=el('svg',{viewBox:'0 0 200 320',preserveAspectRatio:'xMidYMid slice',style:'position:absolute;inset:0;width:100%;height:100%'});
+  var defs=el('defs',{},svg);
+  var lg=el('linearGradient',{id:'gb',x1:'0',y1:'0',x2:'0.3',y2:'1'},defs);
+  el('stop',{offset:'0%','stop-color':'#fcf6ea'},lg);
+  el('stop',{offset:'55%','stop-color':'#f2e7cf'},lg);
+  el('stop',{offset:'100%','stop-color':'#e7d7ba'},lg);
+  var vg=el('radialGradient',{id:'gvign',cx:'50%',cy:'48%',r:'62%'},defs);
+  el('stop',{offset:'60%','stop-color':'#000','stop-opacity':'0'},vg);
+  el('stop',{offset:'100%','stop-color':'#7a6326','stop-opacity':'0.10'},vg);
+  var cg=el('radialGradient',{id:'gcore',cx:'50%',cy:'50%',r:'50%'},defs);
+  [['0%','#ffffff','1'],['18%','#fffdf7','1'],['38%','#fbf4e4','1'],['62%','#f4ead4','1'],['82%','#eaddc0','0.5'],['100%','#e2d4b2','0']].forEach(function(s){
+    el('stop',{offset:s[0],'stop-color':s[1],'stop-opacity':s[2]},cg);
+  });
+  el('rect',{width:'200',height:'320',rx:'14',fill:'url(#gb)'},svg);
+  el('rect',{width:'200',height:'320',rx:'14',fill:'url(#gvign)'},svg);
+  el('rect',{x:'6',y:'6',width:'188',height:'308',rx:'10',fill:'none',stroke:'#a8842f','stroke-width':'1.2',opacity:'0.7'},svg);
+  el('rect',{x:'10.5',y:'10.5',width:'179',height:'299',rx:'7.5',fill:'none',stroke:'#a8842f','stroke-width':'0.5',opacity:'0.5'},svg);
+  // 放射 84
+  var g=el('g',{},svg);
+  for(var i=0;i<84;i++){
+    var a=(360/84)*i*Math.PI/180, tier=i%3;
+    var rIn=50, rOut=[154,118,136][tier], w=[0.7,0.3,0.45][tier], op=[0.85,0.45,0.6][tier];
+    el('line',{x1:cx+rIn*Math.cos(a),y1:cy+rIn*Math.sin(a),x2:cx+rOut*Math.cos(a),y2:cy+rOut*Math.sin(a),stroke:'#a8842f','stroke-width':w,opacity:op},g);
   }
-}
-
-/* ===== SVG 符號庫（每張牌的代表性圖示，純向量、零版權） ===== */
-function Glyph({ name, stroke = "#9b7d3e", size = 76 }){
-  const s = { fill:"none", stroke, strokeWidth:1.4, strokeLinecap:"round", strokeLinejoin:"round" };
-  const P = {};
-  const wrap = (children) => (
-    <svg width={size} height={size} viewBox="0 0 64 64" style={{ display:'block' }}>{children}</svg>
-  );
-  switch(name){
-    case "fool": return wrap(<g style={s}><circle cx="32" cy="20" r="7"/><path d="M20 52c0-9 5-16 12-16s12 7 12 16"/><path d="M44 16l8-6"/><circle cx="52" cy="9" r="2"/></g>);
-    case "existence": return wrap(<g style={s}><circle cx="32" cy="32" r="16"/><circle cx="32" cy="32" r="3" fill={stroke}/></g>);
-    case "inner_voice": return wrap(<g style={s}><path d="M32 12v40"/><circle cx="32" cy="32" r="14"/><path d="M24 32h16"/></g>);
-    case "creativity": return wrap(<g style={s}><path d="M32 10l5 14 14 5-14 5-5 14-5-14-14-5 14-5z"/></g>);
-    case "rebel": return wrap(<g style={s}><path d="M22 52L42 12"/><path d="M22 32h20"/><path d="M18 52h28"/></g>);
-    case "emptiness": return wrap(<g style={s}><circle cx="32" cy="32" r="16"/></g>);
-    case "lovers": return wrap(<g style={s}><circle cx="24" cy="28" r="9"/><circle cx="40" cy="28" r="9"/><path d="M24 40v8M40 40v8"/></g>);
-    case "awareness": return wrap(<g style={s}><path d="M12 32c8-12 32-12 40 0-8 12-32 12-40 0z"/><circle cx="32" cy="32" r="5"/></g>);
-    case "courage": return wrap(<g style={s}><path d="M32 12c8 6 12 12 12 22a12 12 0 01-24 0c0-10 4-16 12-22z"/></g>);
-    case "aloneness": return wrap(<g style={s}><circle cx="32" cy="22" r="7"/><path d="M22 50c0-7 4-12 10-12s10 5 10 12"/></g>);
-    case "change": return wrap(<g style={s}><path d="M20 24a14 14 0 0124-4"/><path d="M44 40a14 14 0 01-24 4"/><path d="M44 14v8h-8M20 50v-8h8"/></g>);
-    case "breakthrough": return wrap(<g style={s}><path d="M16 40h32"/><path d="M32 40V14"/><path d="M24 22l8-8 8 8"/></g>);
-    case "new_vision": return wrap(<g style={s}><path d="M32 52V12"/><path d="M22 22l10-10 10 10"/><circle cx="32" cy="44" r="4"/></g>);
-    case "transformation": return wrap(<g style={s}><path d="M18 44c0-14 6-24 14-30 8 6 14 16 14 30"/><path d="M24 44h16"/></g>);
-    case "integration": return wrap(<g style={s}><circle cx="24" cy="32" r="11"/><circle cx="40" cy="32" r="11"/></g>);
-    case "conditioning": return wrap(<g style={s}><rect x="18" y="18" width="28" height="28" rx="3"/><path d="M26 18v28M34 18v28M42 18v28"/></g>);
-    case "thunderbolt": return wrap(<g style={s}><path d="M34 10L20 36h10l-4 18 18-30H32z"/></g>);
-    case "silence": return wrap(<g style={s}><circle cx="32" cy="32" r="16"/><path d="M26 32h12"/></g>);
-    case "past_lives": return wrap(<g style={s}><circle cx="32" cy="32" r="6"/><circle cx="32" cy="32" r="14"/><path d="M32 4v8M32 52v8"/></g>);
-    case "innocence": return wrap(<g style={s}><circle cx="32" cy="30" r="12"/><path d="M27 30a5 4 0 0010 0" /></g>);
-    case "beyond_illusion": return wrap(<g style={s}><path d="M12 32h40"/><path d="M32 18c8 0 14 6 14 14M32 46c-8 0-14-6-14-14"/></g>);
-    case "completion": return wrap(<g style={s}><circle cx="32" cy="32" r="16"/><path d="M24 32l6 6 12-12"/></g>);
-    case "fire": return wrap(<g style={s}><path d="M32 10c6 8 12 14 12 24a12 12 0 01-24 0c0-6 3-9 6-14 2 4 4 5 6 6-2-8 0-12 0-16z"/></g>);
-    case "water": return wrap(<g style={s}><path d="M32 12c8 12 14 19 14 27a14 14 0 01-28 0c0-8 6-15 14-27z"/></g>);
-    case "clouds": return wrap(<g style={s}><path d="M22 40a9 9 0 010-18 11 11 0 0121-3 8 8 0 011 21z"/></g>);
-    case "rainbow": return wrap(<g style={s}><path d="M14 44a18 18 0 0136 0"/><path d="M22 44a10 10 0 0120 0"/></g>);
-    case "master": return wrap(<g style={s}><circle cx="32" cy="32" r="20"/><circle cx="32" cy="32" r="11"/><circle cx="32" cy="32" r="2.5" fill={stroke}/><path d="M32 4v6M32 54v6M4 32h6M54 32h6"/></g>);
-    default: return wrap(<g style={s}><circle cx="32" cy="32" r="14"/></g>);
+  // 外刻度 36
+  for(var i=0;i<36;i++){
+    var a=(360/36)*i*Math.PI/180, r1=64, r2=68;
+    el('line',{x1:cx+r1*Math.cos(a),y1:cy+r1*Math.sin(a),x2:cx+r2*Math.cos(a),y2:cy+r2*Math.sin(a),stroke:'#a8842f','stroke-width':'0.4',opacity:'0.45'},svg);
   }
-}
-
-const SUIT_LABEL = { major:"大牌 · Major", fire:"火 · Fire", water:"水 · Water", clouds:"雲 · Clouds", rainbow:"彩虹 · Rainbow", master:"師父 · Master" };
-const VALUE_LABEL = { contribute:"貢獻價值", transcend:"超越自我", align:"身心靈一致" };
-
-function Particles(){
-  const items = useMemo(()=>Array.from({length:24}).map(()=>({
-    left:Math.random()*100, size:1.5+Math.random()*3.5, dur:14+Math.random()*16, delay:-Math.random()*26
-  })),[]);
-  return (
-    <div style={{position:'fixed',inset:0,zIndex:1,pointerEvents:'none',overflow:'hidden'}}>
-      {items.map((p,i)=>(<span key={i} className="particle" style={{left:p.left+'vw',bottom:'-10px',width:p.size,height:p.size,animationDuration:p.dur+'s',animationDelay:p.delay+'s'}}/>))}
-    </div>
-  );
-}
-
-/* 幾何牌背：米白底 + 金色放射光芒 + 同心羅盤 + 角落星芒，呼應禪卡儀式感。
-   全程式生成 SVG，向量銳利、隨牌縮放。中央核心採緩漸層白暈，給 C 標誌。 */
-function GeoBack(){
-  const cx=100, cy=158;
-  const rays=[], ticks=[], ticks2=[];
-  for(let i=0;i<84;i++){
-    const a=(360/84)*i*Math.PI/180, tier=i%3;
-    const rIn=50, rOut=[154,118,136][tier], w=[0.7,0.3,0.45][tier], op=[0.85,0.45,0.6][tier];
-    rays.push(<line key={"r"+i} x1={cx+rIn*Math.cos(a)} y1={cy+rIn*Math.sin(a)} x2={cx+rOut*Math.cos(a)} y2={cy+rOut*Math.sin(a)} stroke="#a8842f" strokeWidth={w} opacity={op}/>);
+  [[68,'0.4','0.4'],[64,'0.4','0.4'],[58,'0.5','0.45'],[52,'1','0.7']].forEach(function(c){
+    el('circle',{cx:cx,cy:cy,r:c[0],fill:'none',stroke:'#a8842f','stroke-width':c[1],opacity:c[2]},svg);
+  });
+  // 內刻度 60
+  for(var i=0;i<60;i++){
+    var a=(360/60)*i*Math.PI/180, r1=46, r2=(i%5===0?50:48);
+    el('line',{x1:cx+r1*Math.cos(a),y1:cy+r1*Math.sin(a),x2:cx+r2*Math.cos(a),y2:cy+r2*Math.sin(a),stroke:'#8a6d28','stroke-width':'0.5',opacity:'0.6'},svg);
   }
-  for(let i=0;i<60;i++){
-    const a=(360/60)*i*Math.PI/180, r1=46, r2=(i%5===0?50:48);
-    ticks.push(<line key={"t"+i} x1={cx+r1*Math.cos(a)} y1={cy+r1*Math.sin(a)} x2={cx+r2*Math.cos(a)} y2={cy+r2*Math.sin(a)} stroke="#8a6d28" strokeWidth="0.5" opacity="0.6"/>);
+  el('circle',{cx:cx,cy:cy,r:'46',fill:'url(#gcore)'},svg);
+  el('circle',{cx:cx,cy:cy,r:'45',fill:'none',stroke:'#c9a86a','stroke-width':'0.8',opacity:'0.7'},svg);
+  el('circle',{cx:cx,cy:cy,r:'38',fill:'none',stroke:'#b8923f','stroke-width':'0.4',opacity:'0.5'},svg);
+  el('circle',{cx:cx,cy:cy,r:'32',fill:'none',stroke:'#b8923f','stroke-width':'0.3',opacity:'0.4'},svg);
+  // 角落
+  function corner(ox,oy,sx,sy){
+    [11,16,21,26].forEach(function(r){
+      el('path',{d:'M '+(ox+sx*5)+' '+(oy+sy*r)+' A '+r+' '+r+' 0 0 '+(sx*sy>0?1:0)+' '+(ox+sx*r)+' '+(oy+sy*5),fill:'none',stroke:'#a8842f','stroke-width':'0.5',opacity:'0.65'},svg);
+    });
+    for(var k=0;k<6;k++){var aa=k*18*Math.PI/180;
+      el('line',{x1:ox+sx*6,y1:oy+sy*6,x2:ox+sx*(6+20*Math.cos(aa)),y2:oy+sy*(6+20*Math.sin(aa)),stroke:'#a8842f','stroke-width':'0.35',opacity:'0.5'},svg);}
+    el('circle',{cx:ox+sx*10,cy:oy+sy*10,r:'1.8',fill:'#a8842f',opacity:'0.85'},svg);
   }
-  for(let i=0;i<36;i++){
-    const a=(360/36)*i*Math.PI/180, r1=64, r2=68;
-    ticks2.push(<line key={"u"+i} x1={cx+r1*Math.cos(a)} y1={cy+r1*Math.sin(a)} x2={cx+r2*Math.cos(a)} y2={cy+r2*Math.sin(a)} stroke="#a8842f" strokeWidth="0.4" opacity="0.45"/>);
+  corner(22,32,1,1);corner(178,32,-1,1);corner(22,288,1,-1);corner(178,288,-1,-1);
+  [[34],[286]].forEach(function(p){
+    el('circle',{cx:cx,cy:p[0],r:'11',fill:'none',stroke:'#a8842f','stroke-width':'0.9',opacity:'0.7'},svg);
+    el('circle',{cx:cx,cy:p[0],r:'7',fill:'none',stroke:'#a8842f','stroke-width':'0.4',opacity:'0.5'},svg);
+  });
+  return svg;
+}
+
+/* 牌背容器（幾何 + C 標誌） */
+function renderCardBack(container){
+  container.innerHTML='';
+  container.appendChild(buildGeoBack());
+  var glyph=document.createElement('div');
+  glyph.className='card-back-glyph';
+  glyph.style.marginTop='-4px';
+  var img=document.createElement('img');
+  img.src=LOGO_C_MARK; img.alt='CMoney';
+  glyph.appendChild(img);
+  container.appendChild(glyph);
+}
+
+/* 牌面符號 SVG */
+function buildGlyph(name, stroke, size){
+  var svg=el('svg',{width:size,height:size,viewBox:'0 0 64 64'});
+  var g=el('g',{fill:'none',stroke:stroke,'stroke-width':'1.4','stroke-linecap':'round','stroke-linejoin':'round'},svg);
+  var P={
+    fool:function(){el('circle',{cx:32,cy:20,r:7},g);el('path',{d:'M20 52c0-9 5-16 12-16s12 7 12 16'},g);el('path',{d:'M44 16l8-6'},g);el('circle',{cx:52,cy:9,r:2},g);},
+    existence:function(){el('circle',{cx:32,cy:32,r:16},g);el('circle',{cx:32,cy:32,r:3,fill:stroke},g);},
+    inner_voice:function(){el('path',{d:'M32 12v40'},g);el('circle',{cx:32,cy:32,r:14},g);el('path',{d:'M24 32h16'},g);},
+    creativity:function(){el('path',{d:'M32 10l5 14 14 5-14 5-5 14-5-14-14-5 14-5z'},g);},
+    rebel:function(){el('path',{d:'M22 52L42 12'},g);el('path',{d:'M22 32h20'},g);el('path',{d:'M18 52h28'},g);},
+    emptiness:function(){el('circle',{cx:32,cy:32,r:16},g);},
+    lovers:function(){el('circle',{cx:24,cy:28,r:9},g);el('circle',{cx:40,cy:28,r:9},g);el('path',{d:'M24 40v8M40 40v8'},g);},
+    awareness:function(){el('path',{d:'M12 32c8-12 32-12 40 0-8 12-32 12-40 0z'},g);el('circle',{cx:32,cy:32,r:5},g);},
+    courage:function(){el('path',{d:'M32 12c8 6 12 12 12 22a12 12 0 01-24 0c0-10 4-16 12-22z'},g);},
+    aloneness:function(){el('circle',{cx:32,cy:22,r:7},g);el('path',{d:'M22 50c0-7 4-12 10-12s10 5 10 12'},g);},
+    change:function(){el('path',{d:'M20 24a14 14 0 0124-4'},g);el('path',{d:'M44 40a14 14 0 01-24 4'},g);el('path',{d:'M44 14v8h-8M20 50v-8h8'},g);},
+    breakthrough:function(){el('path',{d:'M16 40h32'},g);el('path',{d:'M32 40V14'},g);el('path',{d:'M24 22l8-8 8 8'},g);},
+    new_vision:function(){el('path',{d:'M32 52V12'},g);el('path',{d:'M22 22l10-10 10 10'},g);el('circle',{cx:32,cy:44,r:4},g);},
+    transformation:function(){el('path',{d:'M18 44c0-14 6-24 14-30 8 6 14 16 14 30'},g);el('path',{d:'M24 44h16'},g);},
+    integration:function(){el('circle',{cx:24,cy:32,r:11},g);el('circle',{cx:40,cy:32,r:11},g);},
+    conditioning:function(){el('rect',{x:18,y:18,width:28,height:28,rx:3},g);el('path',{d:'M26 18v28M34 18v28M42 18v28'},g);},
+    thunderbolt:function(){el('path',{d:'M34 10L20 36h10l-4 18 18-30H32z'},g);},
+    silence:function(){el('circle',{cx:32,cy:32,r:16},g);el('path',{d:'M26 32h12'},g);},
+    past_lives:function(){el('circle',{cx:32,cy:32,r:6},g);el('circle',{cx:32,cy:32,r:14},g);el('path',{d:'M32 4v8M32 52v8'},g);},
+    innocence:function(){el('circle',{cx:32,cy:30,r:12},g);el('path',{d:'M27 30a5 4 0 0010 0'},g);},
+    beyond_illusion:function(){el('path',{d:'M12 32h40'},g);el('path',{d:'M32 18c8 0 14 6 14 14M32 46c-8 0-14-6-14-14'},g);},
+    completion:function(){el('circle',{cx:32,cy:32,r:16},g);el('path',{d:'M24 32l6 6 12-12'},g);},
+    fire:function(){el('path',{d:'M32 10c6 8 12 14 12 24a12 12 0 01-24 0c0-6 3-9 6-14 2 4 4 5 6 6-2-8 0-12 0-16z'},g);},
+    water:function(){el('path',{d:'M32 12c8 12 14 19 14 27a14 14 0 01-28 0c0-8 6-15 14-27z'},g);},
+    clouds:function(){el('path',{d:'M22 40a9 9 0 010-18 11 11 0 0121-3 8 8 0 011 21z'},g);},
+    rainbow:function(){el('path',{d:'M14 44a18 18 0 0136 0'},g);el('path',{d:'M22 44a10 10 0 0120 0'},g);},
+    master:function(){el('circle',{cx:32,cy:32,r:20},g);el('circle',{cx:32,cy:32,r:11},g);el('circle',{cx:32,cy:32,r:2.5,fill:stroke},g);el('path',{d:'M32 4v6M32 54v6M4 32h6M54 32h6'},g);}
+  };
+  (P[name]||function(){el('circle',{cx:32,cy:32,r:14},g);})();
+  return svg;
+}
+
+var SUIT_LABEL={major:'大牌 · Major',fire:'火 · Fire',water:'水 · Water',clouds:'雲 · Clouds',rainbow:'彩虹 · Rainbow',master:'師父 · Master'};
+var VALUE_LABEL={contribute:'貢獻價值',transcend:'超越自我',align:'身心靈一致'};
+
+/* 牌面 */
+function renderCardFront(container, card){
+  container.innerHTML='';
+  var isMaster = card.suit==='master';
+  var frame=document.createElement('div'); frame.className='front-frame'; container.appendChild(frame);
+  var inner=document.createElement('div'); inner.className='front-inner';
+  var badge=document.createElement('div'); badge.className='suit-badge'; badge.textContent=SUIT_LABEL[card.suit]; inner.appendChild(badge);
+  var gw=document.createElement('div'); gw.style.cssText='display:flex;justify-content:center;margin:8px 0 2px';
+  gw.appendChild(buildGlyph(card.glyph, isMaster?'#e2231a':'#9b7d3e', isMaster?64:56)); inner.appendChild(gw);
+  var en=document.createElement('div'); en.className='card-en font-display'; en.textContent=card.name_en; inner.appendChild(en);
+  var zh=document.createElement('div'); zh.className='card-zh'+(isMaster?' master':''); zh.textContent=card.name_zh; inner.appendChild(zh);
+  var vt=document.createElement('div'); vt.className='value-tag'; vt.textContent=VALUE_LABEL[card.value]; inner.appendChild(vt);
+  var ins=document.createElement('p'); ins.className='card-insight'+(isMaster?' master':''); ins.textContent=card.insight; inner.appendChild(ins);
+  var hr=document.createElement('div'); hr.className='hairline'; hr.style.cssText='margin:0 auto 12px;width:46px'; inner.appendChild(hr);
+  var q=document.createElement('p'); q.className='card-q'; q.textContent='「'+card.question+'」'; inner.appendChild(q);
+  container.appendChild(inner);
+}
+
+/* ===== 狀態與流程 ===== */
+var drawn=[], current=null, drawCount=0;
+
+function remaining(){ return CARDS.map(function(_,i){return i;}).filter(function(i){return drawn.indexOf(i)<0;}); }
+
+function draw(){
+  var pool=remaining(); if(pool.length===0) pool=CARDS.map(function(_,i){return i;});
+  var idx=pool[Math.floor(Math.random()*pool.length)];
+  drawn = remaining().length ? drawn.concat([idx]) : [idx];
+  current=idx; drawCount++;
+  track('draw_card',{card_name:CARDS[idx].name_zh,card_en:CARDS[idx].name_en,draw_index:drawCount});
+
+  document.getElementById('deckView').classList.add('hidden');
+  var cv=document.getElementById('cardView'); cv.classList.remove('hidden');
+  var flip=document.getElementById('flipCard'); flip.classList.remove('flipped');
+  renderCardBack(document.getElementById('flipBack'));
+  renderCardFront(document.getElementById('flipFront'), CARDS[idx]);
+  updateCounter();
+  setTimeout(function(){ flip.classList.add('flipped'); }, 280);
+}
+
+function updateCounter(){
+  var c=document.getElementById('counter'); var rem=remaining().length;
+  c.textContent = rem===0 ? '你已看遍 79 種視角，牌堆將重新洗牌。' : ('已抽 '+drawn.length+' / 79 · 還有 '+rem+' 種視角等你');
+}
+
+function again(){
+  var flip=document.getElementById('flipCard'); flip.classList.remove('flipped');
+  setTimeout(function(){
+    document.getElementById('cardView').classList.add('hidden');
+    document.getElementById('deckView').classList.remove('hidden');
+    current=null;
+  }, 350);
+}
+
+function openInterstitial(){
+  track('cta_click_apply',{from_card: current!==null?CARDS[current].name_zh:'none', total_draws:drawCount});
+  document.getElementById('interstitial').classList.remove('hidden');
+}
+function proceed(){
+  track('proceed_to_104',{from_card: current!==null?CARDS[current].name_zh:'none', total_draws:drawCount});
+  // a 標籤的 href 已設定，會自行另開分頁
+}
+
+/* ===== 初始化 ===== */
+function init(){
+  document.getElementById('wordmark').src = LOGO_WORDMARK;
+  renderCardBack(document.getElementById('deckBack'));
+  // 中繼頁 master 符號
+  document.getElementById('interGlyph').appendChild(buildGlyph('master','#e2231a',56));
+  // 粒子
+  var pc=document.getElementById('particles');
+  for(var i=0;i<24;i++){
+    var s=document.createElement('span'); s.className='particle';
+    var size=1.5+Math.random()*3.5;
+    s.style.cssText='left:'+(Math.random()*100)+'vw;bottom:-10px;width:'+size+'px;height:'+size+'px;animation-duration:'+(14+Math.random()*16)+'s;animation-delay:'+(-Math.random()*26)+'s';
+    pc.appendChild(s);
   }
-  const corner=(ox,oy,sx,sy,key)=>{
-    const out=[];
-    [11,16,21,26].forEach((r,j)=>out.push(<path key={key+"a"+j} d={`M ${ox+sx*5} ${oy+sy*r} A ${r} ${r} 0 0 ${sx*sy>0?1:0} ${ox+sx*r} ${oy+sy*5}`} fill="none" stroke="#a8842f" strokeWidth="0.5" opacity="0.65"/>));
-    for(let k=0;k<6;k++){const a=k*18*Math.PI/180; out.push(<line key={key+"l"+k} x1={ox+sx*6} y1={oy+sy*6} x2={ox+sx*(6+20*Math.cos(a))} y2={oy+sy*(6+20*Math.sin(a))} stroke="#a8842f" strokeWidth="0.35" opacity="0.5"/>);}
-    out.push(<circle key={key+"c"} cx={ox+sx*10} cy={oy+sy*10} r="1.8" fill="#a8842f" opacity="0.85"/>);
-    return out;
-  };
-  return (
-    <svg viewBox="0 0 200 320" preserveAspectRatio="xMidYMid slice" style={{position:'absolute',inset:0,width:'100%',height:'100%'}}>
-      <defs>
-        <linearGradient id="gb" x1="0" y1="0" x2="0.3" y2="1">
-          <stop offset="0%" stopColor="#fcf6ea"/><stop offset="55%" stopColor="#f2e7cf"/><stop offset="100%" stopColor="#e7d7ba"/>
-        </linearGradient>
-        <radialGradient id="gvign" cx="50%" cy="48%" r="62%">
-          <stop offset="60%" stopColor="#000" stopOpacity="0"/><stop offset="100%" stopColor="#7a6326" stopOpacity="0.10"/>
-        </radialGradient>
-        <radialGradient id="gcore" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#ffffff"/>
-          <stop offset="18%" stopColor="#fffdf7"/>
-          <stop offset="38%" stopColor="#fbf4e4"/>
-          <stop offset="62%" stopColor="#f4ead4"/>
-          <stop offset="82%" stopColor="#eaddc0" stopOpacity="0.5"/>
-          <stop offset="100%" stopColor="#e2d4b2" stopOpacity="0"/>
-        </radialGradient>
-      </defs>
-      <rect width="200" height="320" rx="14" fill="url(#gb)"/>
-      <rect width="200" height="320" rx="14" fill="url(#gvign)"/>
-      <rect x="6" y="6" width="188" height="308" rx="10" fill="none" stroke="#a8842f" strokeWidth="1.2" opacity="0.7"/>
-      <rect x="10.5" y="10.5" width="179" height="299" rx="7.5" fill="none" stroke="#a8842f" strokeWidth="0.5" opacity="0.5"/>
-      <g>{rays}</g>
-      {ticks2}
-      <circle cx={cx} cy={cy} r="68" fill="none" stroke="#a8842f" strokeWidth="0.4" opacity="0.4"/>
-      <circle cx={cx} cy={cy} r="64" fill="none" stroke="#a8842f" strokeWidth="0.4" opacity="0.4"/>
-      <circle cx={cx} cy={cy} r="58" fill="none" stroke="#a8842f" strokeWidth="0.5" opacity="0.45"/>
-      <circle cx={cx} cy={cy} r="52" fill="none" stroke="#a8842f" strokeWidth="1" opacity="0.7"/>
-      {ticks}
-      <circle cx={cx} cy={cy} r="46" fill="url(#gcore)"/>
-      <circle cx={cx} cy={cy} r="45" fill="none" stroke="#c9a86a" strokeWidth="0.8" opacity="0.7"/>
-      <circle cx={cx} cy={cy} r="38" fill="none" stroke="#b8923f" strokeWidth="0.4" opacity="0.5"/>
-      <circle cx={cx} cy={cy} r="32" fill="none" stroke="#b8923f" strokeWidth="0.3" opacity="0.4"/>
-      {corner(22,32,1,1,"c1")}{corner(178,32,-1,1,"c2")}{corner(22,288,1,-1,"c3")}{corner(178,288,-1,-1,"c4")}
-      <circle cx={cx} cy="34" r="11" fill="none" stroke="#a8842f" strokeWidth="0.9" opacity="0.7"/>
-      <circle cx={cx} cy="34" r="7" fill="none" stroke="#a8842f" strokeWidth="0.4" opacity="0.5"/>
-      <circle cx={cx} cy="286" r="11" fill="none" stroke="#a8842f" strokeWidth="0.9" opacity="0.7"/>
-      <circle cx={cx} cy="286" r="7" fill="none" stroke="#a8842f" strokeWidth="0.4" opacity="0.5"/>
-    </svg>
-  );
+  // 綁定
+  document.getElementById('deck').addEventListener('click', draw);
+  document.getElementById('ctaBtn').addEventListener('click', openInterstitial);
+  document.getElementById('againBtn').addEventListener('click', again);
+  var pb=document.getElementById('proceedBtn'); pb.href=APPLY_URL; pb.addEventListener('click', proceed);
+  document.getElementById('interBack').addEventListener('click', function(){ document.getElementById('interstitial').classList.add('hidden'); });
+  track('page_view_landing',{page:'cmoney_zen_cards'});
 }
-
-/* 牌背：幾何 SVG 為底，原版 CMoney C 標誌坐在放射光芒核心 */
-function CardBack(){
-  return (
-    <div className="card-back-pattern">
-      <GeoBack/>
-      <div className="card-back-glyph" style={{marginTop:'-4px'}}>
-        <img src={LOGO_C_MARK} alt="CMoney" style={{width:'56px',height:'auto',display:'block'}}/>
-      </div>
-    </div>
-  );
-}
-
-/* 牌面角飾：金色放射扇 + 多層弧，與牌背幾何語言一致。可依角落旋轉。 */
-function FrontCorner({ pos }){
-  // pos: 'tl' | 'tr' | 'bl' | 'br'
-  const rot = { tl:0, tr:90, br:180, bl:270 }[pos];
-  const place = {
-    tl:{top:8,left:8}, tr:{top:8,right:8}, bl:{bottom:8,left:8}, br:{bottom:8,right:8}
-  }[pos];
-  const arcs=[8,13,18].map((r,j)=>(
-    <path key={"a"+j} d={`M 4 ${r+3} A ${r} ${r} 0 0 1 ${r+3} 4`} fill="none" stroke="#c9a86a" strokeWidth="0.7" opacity="0.7"/>
-  ));
-  const rad=[];
-  for(let k=0;k<5;k++){const a=k*22.5*Math.PI/180; rad.push(<line key={"l"+k} x1="5" y1="5" x2={5+16*Math.cos(a)} y2={5+16*Math.sin(a)} stroke="#c9a86a" strokeWidth="0.5" opacity="0.55"/>);}
-  return (
-    <svg width="30" height="30" viewBox="0 0 30 30" style={{position:'absolute',transform:`rotate(${rot}deg)`,zIndex:1,...place}}>
-      {arcs}{rad}<circle cx="7" cy="7" r="1.4" fill="#c9a86a" opacity="0.8"/>
-    </svg>
-  );
-}
-
-function CardFront({ card }){
-  const isMaster = card.suit === "master";
-  return (
-    <div className="face face-front">
-      <div className="front-frame"></div>
-      <FrontCorner pos="tl"/><FrontCorner pos="tr"/><FrontCorner pos="bl"/><FrontCorner pos="br"/>
-
-      <div className="flex-1 flex flex-col justify-center text-center" style={{position:'relative',zIndex:2,overflowY:'auto'}}>
-        <div className="suit-badge" style={{color:'#b08d4a'}}>{SUIT_LABEL[card.suit]}</div>
-        <div style={{display:'flex',justifyContent:'center',margin:'8px 0 2px'}}>
-          <Glyph name={card.glyph} stroke={isMaster ? "#e2231a" : "#9b7d3e"} size={isMaster?64:56}/>
-        </div>
-        <div className="font-display" style={{color:'#9b7d3e',letterSpacing:'.18em',fontSize:'11px',textTransform:'uppercase',marginTop:'2px'}}>{card.name_en}</div>
-        <div style={{fontSize:isMaster?'34px':'32px',fontWeight:700,margin:'2px 0',color:'#1a2235',letterSpacing:'.08em'}}>{card.name_zh}</div>
-        <div style={{display:'inline-block',margin:'4px auto 10px',padding:'2px 12px',borderRadius:'20px',background:'rgba(226,35,26,0.08)',border:'1px solid rgba(226,35,26,0.25)',fontSize:'11px',color:'#b21f17',letterSpacing:'.1em'}}>{VALUE_LABEL[card.value]}</div>
-        <p style={{fontSize:isMaster?'13px':'14px',lineHeight:1.8,color:'#2b3450',margin:'0 6px 12px',fontWeight:500}}>{card.insight}</p>
-        <div className="hairline" style={{margin:'0 auto 12px',width:'46px'}}></div>
-        <p style={{fontSize:'13px',lineHeight:1.75,color:'#6a5a36',fontStyle:'italic',margin:'0 6px'}}>「{card.question}」</p>
-      </div>
-    </div>
-  );
-}
-
-function App(){
-  // ===== APPLY_URL：104 全曜財經，已預埋 UTM =====
-  const APPLY_URL = "https://www.104.com.tw/company/10r4uuvc?utm_source=zen_cards&utm_medium=landing&utm_campaign=hr_ai_recruit#info06";
-
-  const [drawn, setDrawn] = useState([]);
-  const [current, setCurrent] = useState(null);
-  const [flipped, setFlipped] = useState(false);
-  const [phase, setPhase] = useState('deck');
-  const [showInterstitial, setShowInterstitial] = useState(false);
-  const drawCountRef = useRef(0);
-
-  // 進站瀏覽事件（一次）
-  useEffect(()=>{ track('page_view_landing', { page:'cmoney_zen_cards' }); },[]);
-
-  const remaining = CARDS.map((_,i)=>i).filter(i=>!drawn.includes(i));
-
-  const draw = () => {
-    const pool = remaining.length ? remaining : CARDS.map((_,i)=>i);
-    const idx = pool[Math.floor(Math.random()*pool.length)];
-    const nextDrawn = remaining.length ? [...drawn, idx] : [idx];
-    setDrawn(nextDrawn);
-    setCurrent(idx);
-    setFlipped(false);
-    setPhase('card');
-    drawCountRef.current += 1;
-    track('draw_card', { card_name: CARDS[idx].name_zh, card_en: CARDS[idx].name_en, draw_index: drawCountRef.current });
-    setTimeout(()=>setFlipped(true), 280);
-  };
-
-  const again = () => {
-    setFlipped(false);
-    setTimeout(()=>{ setPhase('deck'); setCurrent(null); }, 350);
-  };
-
-  // 點「投遞履歷」→ 開啟中繼確認頁（第③層：投遞意圖）
-  const onCta = () => {
-    track('cta_click_apply', { from_card: current!==null ? CARDS[current].name_zh : 'none', total_draws: drawCountRef.current });
-    setShowInterstitial(true);
-  };
-
-  // 中繼頁點「前往 104」→ 第④層前端代理指標（決心投遞）後跳轉
-  const onProceed = () => {
-    track('proceed_to_104', { from_card: current!==null ? CARDS[current].name_zh : 'none', total_draws: drawCountRef.current });
-    window.open(APPLY_URL, '_blank', 'noopener');
-    // 短暫保留中繼頁，避免使用者誤以為沒反應；可手動關閉
-  };
-
-  const seenAll = remaining.length === 0;
-
-  return (
-    <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',padding:'40px 22px 60px',position:'relative'}}>
-      <Particles/>
-
-      {/* LOGO 頁首 */}
-      <div className="reveal" style={{animationDelay:'.05s',zIndex:3,marginBottom:'30px',display:'flex',justifyContent:'center',width:'100%'}}>
-        <img src={LOGO_WORDMARK} alt="CMoney" style={{height:'30px',display:'block',filter:'drop-shadow(0 2px 10px rgba(0,0,0,0.5))'}}/>
-      </div>
-
-      {/* 標題 */}
-      <div style={{textAlign:'center',maxWidth:580,zIndex:3}}>
-        <div className="reveal font-display" style={{animationDelay:'.2s',color:'var(--gold)',letterSpacing:'.34em',fontSize:'12px',textTransform:'uppercase',marginBottom:'20px'}}>Zen Cards of Decision</div>
-        <h1 className="reveal" style={{animationDelay:'.35s',fontSize:'27px',lineHeight:1.55,fontWeight:500,margin:0,color:'#efe8d8'}}>AI 是 79 種專家思維</h1>
-        <h1 className="reveal" style={{animationDelay:'.6s',fontSize:'27px',lineHeight:1.55,fontWeight:600,margin:'2px 0 0',color:'var(--cm-red-2)'}}>而決策，是我們最終的產出</h1>
-        <p className="reveal" style={{animationDelay:'.9s',color:'var(--mist)',fontSize:'14px',lineHeight:1.95,marginTop:'20px',fontWeight:300}}>
-          奧修禪卡共 79 張，不預測命運，只提供觀看當下的視角。<br/>
-          AI 之於 CMoney 亦然——它給你 78 種專家視角，<br/>而第 79 張，是掌握自己思維的你。
-        </p>
-      </div>
-
-      {/* 互動區 */}
-      <div style={{marginTop:'46px',zIndex:3,width:'100%',display:'flex',flexDirection:'column',alignItems:'center'}}>
-        {phase==='deck' && (
-          <div className="reveal" style={{animationDelay:'1.2s',display:'flex',flexDirection:'column',alignItems:'center'}}>
-            <div className="deck-wrap">
-              <div className="deck" onClick={draw} role="button" aria-label="抽一張牌">
-                <div className="stack-card" style={{transform:'translate(10px,10px) rotate(4deg)',opacity:.5}}></div>
-                <div className="stack-card" style={{transform:'translate(5px,5px) rotate(2deg)',opacity:.75}}></div>
-                <div className="stack-card"><CardBack/></div>
-              </div>
-            </div>
-            <p style={{marginTop:'30px',color:'var(--gold-2)',fontSize:'15px',letterSpacing:'.12em'}}>抽一張，看見你的思維維度</p>
-            <p style={{marginTop:'6px',color:'var(--mist)',fontSize:'12px',opacity:.7}}>（點擊牌堆 · 共 79 張）</p>
-          </div>
-        )}
-
-        {phase==='card' && current!==null && (
-          <div style={{display:'flex',flexDirection:'column',alignItems:'center'}}>
-            <div className="flip-scene fade-in-up">
-              <div className={"flip-card"+(flipped?" flipped":"")}>
-                <div className="face face-back"><CardBack/></div>
-                <CardFront card={CARDS[current]}/>
-              </div>
-            </div>
-            <div className="fade-in-up" style={{animationDelay:'.9s',marginTop:'36px',display:'flex',flexDirection:'column',alignItems:'center',gap:'13px',width:'100%',maxWidth:'310px'}}>
-              <button onClick={onCta} className="btn-primary"
-                 style={{width:'100%',textAlign:'center',padding:'15px 20px',borderRadius:'12px',border:'none',cursor:'pointer',fontSize:'15px',fontFamily:'inherit'}}>
-                這就是我們工作的方式 → 投遞履歷
-              </button>
-              <button onClick={again} className="btn-ghost"
-                 style={{width:'100%',padding:'13px 20px',borderRadius:'12px',background:'transparent',cursor:'pointer',fontSize:'14px',fontFamily:'inherit'}}>
-                再抽一張
-              </button>
-              <p style={{color:'var(--mist)',fontSize:'12px',opacity:.7,marginTop:'2px'}}>
-                {seenAll ? "你已看遍 79 種視角，牌堆將重新洗牌。" : `已抽 ${drawn.length} / 79 · 還有 ${remaining.length} 種視角等你`}
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* 頁尾主張 */}
-      <div style={{marginTop:'auto',paddingTop:'54px',textAlign:'center',zIndex:3,maxWidth:560}}>
-        <div className="hairline" style={{width:'120px',margin:'0 auto 18px'}}></div>
-        <p className="font-display" style={{color:'var(--gold-2)',fontSize:'19px',letterSpacing:'.06em',lineHeight:1.6,marginBottom:'10px'}}>「與 AI 同行，用決策創造價值」</p>
-        <p style={{color:'var(--mist)',fontSize:'12px',letterSpacing:'.05em'}}>是 CMoney 前往未來的唯一方向。</p>
-        <p style={{color:'var(--mist)',fontSize:'12.5px',letterSpacing:'.14em',lineHeight:1.9,marginTop:'18px'}}>貢獻價值 · 超越自我 · 身心靈一致</p>
-      </div>
-
-      {/* ===== 中繼確認頁（解法 C：第④層前端代理指標）===== */}
-      {showInterstitial && (
-        <div style={{position:'fixed',inset:0,zIndex:50,display:'flex',alignItems:'center',justifyContent:'center',
-              padding:'24px',background:'rgba(6,9,17,0.86)',backdropFilter:'blur(8px)',
-              animation:'rise .45s ease forwards',opacity:0}}>
-          <div style={{maxWidth:420,width:'100%',textAlign:'center',background:'linear-gradient(170deg,#141b2e,#0c1120)',
-                border:'1px solid rgba(201,168,106,0.35)',borderRadius:'20px',padding:'40px 28px',
-                boxShadow:'0 30px 80px rgba(0,0,0,0.6)'}}>
-            <div style={{display:'flex',justifyContent:'center',marginBottom:'18px'}}>
-              <Glyph name="master" stroke="#e2231a" size={56}/>
-            </div>
-            <div className="font-display" style={{color:'var(--gold)',letterSpacing:'.28em',fontSize:'11px',textTransform:'uppercase',marginBottom:'14px'}}>The Final Card · You</div>
-            <h2 style={{fontSize:'21px',fontWeight:600,color:'#efe8d8',lineHeight:1.6,margin:'0 0 14px'}}>第 79 張，由你親手翻開</h2>
-            <p style={{color:'var(--mist)',fontSize:'14px',lineHeight:1.95,margin:'0 0 26px'}}>
-              前面 78 種視角，是 AI 給你的思維。<br/>
-              而下一個決策——把履歷投出去——<br/>是你成為自己師父的第一步。
-            </p>
-            <button onClick={onProceed} className="btn-primary"
-              style={{width:'100%',padding:'15px',borderRadius:'12px',border:'none',cursor:'pointer',fontSize:'15px',fontFamily:'inherit',marginBottom:'12px'}}>
-              前往 104 · 投遞我的履歷 →
-            </button>
-            <button onClick={()=>setShowInterstitial(false)} className="btn-ghost"
-              style={{width:'100%',padding:'12px',borderRadius:'12px',background:'transparent',cursor:'pointer',fontSize:'13px',fontFamily:'inherit'}}>
-              再想想，回到牌卡
-            </button>
-            <p style={{color:'rgba(154,163,184,0.55)',fontSize:'11px',marginTop:'16px',lineHeight:1.7}}>
-              將前往 104 全曜財經資訊徵才頁面（另開分頁）
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
 </script>
 </body>
 </html>
